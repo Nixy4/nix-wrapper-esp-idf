@@ -37,7 +37,6 @@ namespace wrapper
     i2c_port_t port_;
     i2c_master_bus_handle_t bus_handle_;
 
-    // 私有方法：实际执行Probe的逻辑
     esp_err_t ProbeInternal(int addr);
 
   public:

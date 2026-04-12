@@ -217,7 +217,6 @@ bool SpiDevice::WriteRegBytes(uint8_t reg_addr, const std::vector<uint8_t>& data
 }
 
 bool SpiDevice::ReadRegBytes(uint8_t reg_addr, std::vector<uint8_t>& data, size_t len) {
-    // 全双工：发送 [reg_addr, dummy*len]，接收缓冲区第 1..n 字节为数据
     std::vector<uint8_t> tx(1 + len, 0x00);
     tx[0] = reg_addr;
     std::vector<uint8_t> rx(1 + len, 0x00);

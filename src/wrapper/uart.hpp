@@ -101,6 +101,8 @@ namespace wrapper
       return uart_write_bytes(port_->GetPort(), str.c_str(), str.size());
     }
 
+    int WriteLine(const std::string &line, char delimiter = '\n');
+
     // --- read: raw pointer (inline) ---
 
     inline int ReadBytes(uint8_t *buf, size_t len, int timeout_ms)
@@ -108,20 +110,15 @@ namespace wrapper
       return uart_read_bytes(port_->GetPort(), buf, len, pdMS_TO_TICKS(timeout_ms));
     }
 
-    // --- read: single byte / vector / string ---
+    // --- read: single byte / vector ---
 
     int ReadByte(uint8_t &data, int timeout_ms);
 
     int ReadBytes(std::vector<uint8_t> &buf, size_t len, int timeout_ms);
 
-    // 读取所有缓冲区中已有的数据，timeout_ms 为等待首字节的超时
     int ReadAvailable(std::vector<uint8_t> &buf, int timeout_ms);
 
-    // 按分隔符读一行（不包含分隔符），timeout_ms 为每字节超时
     bool ReadLine(std::string &line, char delimiter, int timeout_ms);
-
-    // 写一行（内容 + 分隔符）
-    int WriteLine(const std::string &line, char delimiter = '\n');
 
     // --- buffer control ---
     bool Flush();
@@ -135,24 +132,12 @@ namespace wrapper
   public:
     AtDevice(Logger &logger);
 
-    // --- WriteAtCmd: 仅发送命令（追加 \r\n） ---
-
-    // C 风格接口
     int WriteAtCmd(const char *cmd);
-
-    // C++ 风格接口
     int WriteAtCmd(const std::string &cmd);
 
-    // --- SendAtCmd: 发送命令并读取响应 ---
-
-    // C 风格接口
-    // response: 接收响应字符串, timeout_ms: 等待响应超时
     bool SendAtCmd(const char *cmd, std::string &response, int timeout_ms = 3000);
-
-    // C++ 风格接口
     bool SendAtCmd(const std::string &cmd, std::string &response, int timeout_ms = 3000);
 
-    // --- 等待特定关键字出现（如 "OK" / "ERROR"） ---
     bool WaitForKeyword(const std::string &keyword, std::string &response, int timeout_ms = 3000);
   };
 

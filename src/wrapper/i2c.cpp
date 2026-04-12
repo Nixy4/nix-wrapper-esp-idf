@@ -119,11 +119,9 @@ bool I2cBus::Scan(int start_addr, int end_addr) {
     
     int found_count = 0;
     
-    // 打印表头
     logger_.Info("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f");
     
     for (int i = 0; i < 128; i += 16) {
-        // 检查当前行是否在扫描范围内
         if (i + 15 < start_addr || i > end_addr) {
              continue;
         }
@@ -134,7 +132,7 @@ bool I2cBus::Scan(int start_addr, int end_addr) {
         for (int j = 0; j < 16; j++) {
             int addr = i + j;
             if (addr < start_addr || addr > end_addr) {
-                ss << "   "; // 超出范围
+                ss << "   ";
             } else {
                 esp_err_t ret = ProbeInternal(addr);
                 if (ret == ESP_OK) {

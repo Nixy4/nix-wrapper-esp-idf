@@ -343,7 +343,6 @@ bool AtDevice::WaitForKeyword(const std::string &keyword, std::string &response,
         if (!got && line.empty()) {
             break;
         }
-        // 去除行尾 '\r'
         if (!line.empty() && line.back() == '\r') {
             line.pop_back();
         }

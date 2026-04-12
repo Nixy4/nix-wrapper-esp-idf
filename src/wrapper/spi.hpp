@@ -139,23 +139,17 @@ public:
 
     // --- vector variants ---
 
-    // 全双工收发（等长）
     bool Transfer(const std::vector<uint8_t>& tx_data, std::vector<uint8_t>& rx_data);
 
-    // 只写
     bool Write(const std::vector<uint8_t>& data);
 
-    // 只读（发送 dummy 字节）
     bool Read(size_t len, std::vector<uint8_t>& rx_data);
 
-    // 单字节
     bool WriteByte(uint8_t data);
     bool ReadByte(uint8_t& data);
 
-    // --- 寄存器操作（地址 + 数据，适用于大多数 SPI 外设）---
-    // 写：单次事务发送 [reg_addr, data...]
+    // --- register operations ---
     bool WriteRegBytes(uint8_t reg_addr, const std::vector<uint8_t>& data);
-    // 读：发送 [reg_addr, dummy*len]，返回第 2..n+1 字节
     bool ReadRegBytes(uint8_t reg_addr, std::vector<uint8_t>& data, size_t len);
 
     bool WriteReg8(uint8_t reg_addr, uint8_t data);
