@@ -216,7 +216,7 @@ I2sBus i2s_bus(logger_i2s_bus);
 Axp2101 axp2101(logger_axp2101);
 Aw9523 aw9523(logger_aw9523);
 I2cTouch ft5x06(logger_ft5x06);
-Ili9341 ili9341(logger_ili9341, spi_bus);
+Ili9341 ili9341(logger_ili9341);
 LvglPort lvgl_port(logger_lvgl);
 
 AudioCodec audio_codec(logger_audio_codec);
@@ -356,7 +356,7 @@ bool M5StackCoreS3::InitDevice(bool power, bool audio, bool display, bool touch)
   }
 
   if (display) {
-      if (!ili9341.Init(spi_lcd_config))
+      if (!ili9341.Init(spi_bus, spi_lcd_config))
       {
         ili9341.GetLogger().Error("Failed to initialize display");
         return false;
