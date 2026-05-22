@@ -2,12 +2,14 @@
 
 #include "gt911.hpp"
 
-namespace wrapper {
+namespace wrapper
+{
 
-bool Gt911::Init(const I2cBus& bus, const I2cTouchConfig& config) {
+bool Gt911::Init(const I2cBus& bus, const I2cTouchConfig& config)
+{
     return I2cTouch::Init(bus, config, esp_lcd_touch_new_i2c_gt911);
 }
 
-} // namespace wrapper
+}  // namespace wrapper
 
 #endif

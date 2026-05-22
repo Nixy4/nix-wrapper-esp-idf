@@ -3,30 +3,21 @@
 namespace wrapper
 {
 
-M5StackComXLTE::M5StackComXLTE(Logger &logger) : AtDevice(logger)
-{
-}
+M5StackComXLTE::M5StackComXLTE(Logger &logger) : AtDevice(logger) {}
 
-M5StackComXLTE::~M5StackComXLTE()
-{
-}
+M5StackComXLTE::~M5StackComXLTE() {}
 
-bool M5StackComXLTE::Init(UartPort &port)
-{
-    return AtDevice::Init(port);
-}
+bool M5StackComXLTE::Init(UartPort &port) { return AtDevice::Init(port); }
 
-bool M5StackComXLTE::Deinit()
-{
-    return AtDevice::Deinit();
-}
+bool M5StackComXLTE::Deinit() { return AtDevice::Deinit(); }
 
 // --- private helper ---
 
 bool M5StackComXLTE::SendAndExpectOk(const char *cmd, std::string &response, int timeout_ms)
 {
     FlushInput();
-    if (WriteAtCmd(cmd) < 0) {
+    if (WriteAtCmd(cmd) < 0)
+    {
         return false;
     }
     return WaitForKeyword("OK", response, timeout_ms);
@@ -115,7 +106,8 @@ bool M5StackComXLTE::SwitchToCommandMode(int timeout_ms)
     FlushInput();
     // +++ is sent without CR/LF
     int written = WriteBytes(reinterpret_cast<const uint8_t *>("+++"), 3);
-    if (written < 0) {
+    if (written < 0)
+    {
         return false;
     }
     vTaskDelay(pdMS_TO_TICKS(1100));
@@ -138,4 +130,4 @@ bool M5StackComXLTE::SetFixedBaudRate(int rate, int timeout_ms)
     return SendAndExpectOk(cmd.c_str(), response, timeout_ms);
 }
 
-} // namespace wrapper
+}  // namespace wrapper

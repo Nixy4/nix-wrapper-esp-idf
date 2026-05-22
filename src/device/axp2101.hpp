@@ -7,7 +7,7 @@ namespace wrapper
 
 class Axp2101 : public I2cDevice
 {
-public:
+   public:
     static constexpr uint8_t DEFAULT_ADDR = 0x34;
     static constexpr uint32_t DEFAULT_SPEED = 400000;
 
@@ -15,4 +15,4 @@ public:
     ~Axp2101();
 };
 
-} // namespace wrapper
+}  // namespace wrapper

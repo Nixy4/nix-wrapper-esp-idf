@@ -14,41 +14,41 @@
 
 namespace wrapper
 {
-    class M5StackTab5
+class M5StackTab5
+{
+   private:
+    M5StackTab5() = default;
+    ~M5StackTab5() = default;
+
+    M5StackTab5(const M5StackTab5&) = delete;
+    M5StackTab5& operator=(const M5StackTab5&) = delete;
+    M5StackTab5(M5StackTab5&&) = delete;
+    M5StackTab5& operator=(M5StackTab5&&) = delete;
+
+   public:
+    static M5StackTab5& GetInstance()
     {
-    private:
-        M5StackTab5() = default;
-        ~M5StackTab5() = default;
+        static M5StackTab5 instance;
+        return instance;
+    }
 
-        M5StackTab5(const M5StackTab5&) = delete;
-        M5StackTab5& operator=(const M5StackTab5&) = delete;
-        M5StackTab5(M5StackTab5&&) = delete;
-        M5StackTab5& operator=(M5StackTab5&&) = delete;
+    bool Init(int level);
 
-    public:
-        static M5StackTab5& GetInstance()
-        {
-            static M5StackTab5 instance;
-            return instance;
-        }
+    I2cBus& GetI2cBus();
+    Pi4ioe5v6408& GetIoExpander0();
+    Pi4ioe5v6408& GetIoExpander1();
+    LedcTimer& GetLedcTimer();
+    LedcChannel& GetLedcChannel();
+    LdoRegulator& GetDsiPhyLdo();
+    DsiBus& GetDsiBus();
+    Ili9881c& GetDsiDisplay();
+    Gt911& GetGt911Touch();
+    I2sBus& GetI2sBus();
+    AudioCodec& GetAudioCodec();
+    LvglPort& GetLvglPort();
 
-        bool Init(int level);
-
-        I2cBus& GetI2cBus();
-        Pi4ioe5v6408& GetIoExpander0();
-        Pi4ioe5v6408& GetIoExpander1();
-        LedcTimer& GetLedcTimer();
-        LedcChannel& GetLedcChannel();
-        LdoRegulator& GetDsiPhyLdo();
-        DsiBus& GetDsiBus();
-        Ili9881c& GetDsiDisplay();
-        Gt911& GetGt911Touch();
-        I2sBus& GetI2sBus();
-        AudioCodec& GetAudioCodec();
-        LvglPort& GetLvglPort();
-
-        void SetDisplayBrightness(int percent);
-        void SetDisplayBacklight(bool on);
-        void SetDisplayPower(bool on);
-    };
-}
+    void SetDisplayBrightness(int percent);
+    void SetDisplayBacklight(bool on);
+    void SetDisplayPower(bool on);
+};
+}  // namespace wrapper

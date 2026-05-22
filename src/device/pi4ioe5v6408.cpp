@@ -5,14 +5,9 @@
 namespace wrapper
 {
 
-Pi4ioe5v6408::Pi4ioe5v6408(Logger &logger) : m_logger(logger)
-{
-}
+Pi4ioe5v6408::Pi4ioe5v6408(Logger &logger) : m_logger(logger) {}
 
-Pi4ioe5v6408::~Pi4ioe5v6408()
-{
-    Deinit();
-}
+Pi4ioe5v6408::~Pi4ioe5v6408() { Deinit(); }
 
 bool Pi4ioe5v6408::Init(const I2cBus &bus, uint8_t dev_addr)
 {
@@ -114,7 +109,8 @@ bool Pi4ioe5v6408::SetPullupMode(uint32_t io_num, uint32_t pull_mode)
         return false;
     }
 
-    esp_err_t ret = esp_io_expander_set_pullupdown(m_handle, io_num, (esp_io_expander_pullupdown_t)pull_mode);
+    esp_err_t ret =
+        esp_io_expander_set_pullupdown(m_handle, io_num, (esp_io_expander_pullupdown_t)pull_mode);
     if (ret != ESP_OK)
     {
         m_logger.Error("Failed to set pullup mode: %s", esp_err_to_name(ret));
@@ -151,6 +147,6 @@ bool Pi4ioe5v6408::PrintState()
     return esp_io_expander_print_state(m_handle) == ESP_OK;
 }
 
-} // namespace wrapper
+}  // namespace wrapper
 
-#endif // __has_include("esp_io_expander.h")
+#endif  // __has_include("esp_io_expander.h")

@@ -16,7 +16,9 @@ bool I2cDisplay::InitIo(const I2cBus &bus, const I2cDisplayConfig &config)
     return true;
 }
 
-bool I2cDisplay::InitPanel(const I2cDisplayConfig &config, std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
+bool I2cDisplay::InitPanel(
+    const I2cDisplayConfig &config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
 {
     esp_err_t err = ESP_OK;
 
@@ -53,9 +55,10 @@ bool I2cDisplay::InitPanel(const I2cDisplayConfig &config, std::function<esp_err
 }
 
 bool I2cDisplay::Init(
-    const I2cBus &bus,
-    const I2cDisplayConfig &config,
-    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t *, esp_lcd_panel_handle_t *)> new_panel_func,
+    const I2cBus &bus, const I2cDisplayConfig &config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t *,
+                            esp_lcd_panel_handle_t *)>
+        new_panel_func,
     std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
 {
     if (!InitIo(bus, config))
@@ -95,8 +98,7 @@ bool I2cDisplay::Deinit()
     return true;
 }
 
-bool SpiDisplay::InitIo(const SpiBus &bus,
-                        const SpiDisplayConfig &config)
+bool SpiDisplay::InitIo(const SpiBus &bus, const SpiDisplayConfig &config)
 {
     if (io_handle_ != nullptr)
         return true;
@@ -110,7 +112,9 @@ bool SpiDisplay::InitIo(const SpiBus &bus,
     return true;
 }
 
-bool SpiDisplay::InitPanel(const SpiDisplayConfig &config, std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
+bool SpiDisplay::InitPanel(
+    const SpiDisplayConfig &config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
 {
     esp_err_t err = ESP_OK;
 
@@ -144,9 +148,10 @@ bool SpiDisplay::InitPanel(const SpiDisplayConfig &config, std::function<esp_err
 }
 
 bool SpiDisplay::Init(
-    const SpiBus &bus,
-    const SpiDisplayConfig &config,
-    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t *, esp_lcd_panel_handle_t *)> new_panel_func,
+    const SpiBus &bus, const SpiDisplayConfig &config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t *,
+                            esp_lcd_panel_handle_t *)>
+        new_panel_func,
     std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
 {
     if (!InitIo(bus, config))

@@ -9,83 +9,83 @@
 
 namespace wrapper
 {
-  class Speaker // no codec
-  {
-      Logger &logger_;
-      I2sBus *i2s_bus_ = nullptr; 
+class Speaker  // no codec
+{
+    Logger &logger_;
+    I2sBus *i2s_bus_ = nullptr;
 
-      float volume_ = 0.0f;
-      bool mute_ = false;
+    float volume_ = 0.0f;
+    bool mute_ = false;
 
-    public:
-      Speaker(Logger &logger);
-      ~Speaker();
+   public:
+    Speaker(Logger &logger);
+    ~Speaker();
 
-      Logger& GetLogger() const { return logger_; }
-      I2sBus& GetI2sBus() const { return *i2s_bus_; }
+    Logger &GetLogger() const { return logger_; }
+    I2sBus &GetI2sBus() const { return *i2s_bus_; }
 
-      bool Init(I2sBus &i2s_bus);
-      bool Deinit();
+    bool Init(I2sBus &i2s_bus);
+    bool Deinit();
 
-      bool SetSoftVolume(float volume);
-      float GetSoftVolume() const { return volume_; }
+    bool SetSoftVolume(float volume);
+    float GetSoftVolume() const { return volume_; }
 
-      bool SetMute(bool mute);
-      bool IsMuted(bool &mute) const { return mute_; }
+    bool SetMute(bool mute);
+    bool IsMuted(bool &mute) const { return mute_; }
 
-      bool Enable();
-      bool Disable();
-      bool IsEnabled(bool &enable);
+    bool Enable();
+    bool Disable();
+    bool IsEnabled(bool &enable);
 
-      bool Write(const void *data, size_t size);
+    bool Write(const void *data, size_t size);
 
-      template<typename T>
-      bool Write(const std::vector<T>& data)
-      {
-          return Write(data.data(), data.size() * sizeof(T));
-      }
-  };
+    template <typename T>
+    bool Write(const std::vector<T> &data)
+    {
+        return Write(data.data(), data.size() * sizeof(T));
+    }
+};
 
-  class Microphone // no codec
-  {
-      Logger &logger_;
-      I2sBus *i2s_bus_ = nullptr;
+class Microphone  // no codec
+{
+    Logger &logger_;
+    I2sBus *i2s_bus_ = nullptr;
 
-      float volume_ = 0.0f;
-      bool mute_ = false;
+    float volume_ = 0.0f;
+    bool mute_ = false;
 
-  public:
-      Microphone(Logger &logger);
-      ~Microphone();
+   public:
+    Microphone(Logger &logger);
+    ~Microphone();
 
-      Logger& GetLogger() const { return logger_; }
-      I2sBus& GetI2sBus() const { return *i2s_bus_; }
+    Logger &GetLogger() const { return logger_; }
+    I2sBus &GetI2sBus() const { return *i2s_bus_; }
 
-      bool Init(I2sBus &i2s_bus);
-      bool Deinit();
+    bool Init(I2sBus &i2s_bus);
+    bool Deinit();
 
-      bool SetSoftVolume(float volume);
-      float GetSoftVolume() const { return volume_; }
+    bool SetSoftVolume(float volume);
+    float GetSoftVolume() const { return volume_; }
 
-      bool SetMute(bool mute);
-      bool IsMuted(bool &mute) const { return mute_; }
+    bool SetMute(bool mute);
+    bool IsMuted(bool &mute) const { return mute_; }
 
-      bool Enable();
-      bool Disable();
-      bool IsEnabled(bool &enable);
+    bool Enable();
+    bool Disable();
+    bool IsEnabled(bool &enable);
 
-      bool Read(void *data, size_t size);
+    bool Read(void *data, size_t size);
 
-      template<typename T>
-      bool Read(std::vector<T>& data, size_t count)
-      {
+    template <typename T>
+    bool Read(std::vector<T> &data, size_t count)
+    {
         data.resize(count);
         return Read(data.data(), count * sizeof(T));
-      }
-  };
+    }
+};
 
-  class SpeakerCodec
-  {
+class SpeakerCodec
+{
     Logger &logger_;
     I2sBus *i2s_bus_ = nullptr;
     const audio_codec_data_if_t *i2s_data_if_ = nullptr;
@@ -96,17 +96,17 @@ namespace wrapper
     esp_codec_dev_handle_t spk_codec_dev_handle_ = nullptr;
     bool spk_enabled_ = false;
 
-  public:
+   public:
     SpeakerCodec(Logger &logger);
     ~SpeakerCodec();
 
-    Logger& GetLogger() const { return logger_; }
-    I2sBus& GetI2sBus() const { return *i2s_bus_; }
+    Logger &GetLogger() const { return logger_; }
+    I2sBus &GetI2sBus() const { return *i2s_bus_; }
 
-    const audio_codec_data_if_t * GetDataInterface() const { return i2s_data_if_; }
-    const audio_codec_gpio_if_t * GetGpioInterface() const { return i2s_gpio_if_; }
-    const audio_codec_ctrl_if_t * GetCtrlInterface() const { return spk_ctrl_if_; }
-    const audio_codec_if_t * GetCodecInterface() const { return spk_codec_if_; }
+    const audio_codec_data_if_t *GetDataInterface() const { return i2s_data_if_; }
+    const audio_codec_gpio_if_t *GetGpioInterface() const { return i2s_gpio_if_; }
+    const audio_codec_ctrl_if_t *GetCtrlInterface() const { return spk_ctrl_if_; }
+    const audio_codec_if_t *GetCodecInterface() const { return spk_codec_if_; }
 
     // operations
     bool Init(I2sBus &i2s_bus);
@@ -127,15 +127,15 @@ namespace wrapper
 
     bool Write(const void *data, size_t size);
 
-    template<typename T>
-    bool Write(std::vector<T>& data)
+    template <typename T>
+    bool Write(std::vector<T> &data)
     {
         return Write(data.data(), data.size() * sizeof(T));
     }
-  };
+};
 
-  class MicrophoneCodec
-  {
+class MicrophoneCodec
+{
     Logger &logger_;
     I2sBus *i2s_bus_ = nullptr;
     const audio_codec_data_if_t *i2s_data_if_ = nullptr;
@@ -146,17 +146,17 @@ namespace wrapper
     esp_codec_dev_handle_t mic_codec_dev_handle_ = nullptr;
     bool mic_enabled_ = false;
 
-  public:
+   public:
     MicrophoneCodec(Logger &logger);
     ~MicrophoneCodec();
 
-    Logger& GetLogger() const { return logger_; }
-    I2sBus& GetI2sBus() const { return *i2s_bus_; }
+    Logger &GetLogger() const { return logger_; }
+    I2sBus &GetI2sBus() const { return *i2s_bus_; }
 
-    const audio_codec_data_if_t * GetDataInterface() const { return i2s_data_if_; }
-    const audio_codec_gpio_if_t * GetGpioInterface() const { return i2s_gpio_if_; }
-    const audio_codec_ctrl_if_t * GetCtrlInterface() const { return mic_ctrl_if_; }
-    const audio_codec_if_t * GetCodecInterface() const { return mic_codec_if_; }
+    const audio_codec_data_if_t *GetDataInterface() const { return i2s_data_if_; }
+    const audio_codec_gpio_if_t *GetGpioInterface() const { return i2s_gpio_if_; }
+    const audio_codec_ctrl_if_t *GetCtrlInterface() const { return mic_ctrl_if_; }
+    const audio_codec_if_t *GetCodecInterface() const { return mic_codec_if_; }
 
     // operations
     bool Init(I2sBus &i2s_bus);
@@ -177,48 +177,66 @@ namespace wrapper
 
     bool Read(void *data, size_t size);
 
-    template<typename T>
-    bool Read(std::vector<T>& data, size_t count)
+    template <typename T>
+    bool Read(std::vector<T> &data, size_t count)
     {
         data.resize(count);
         return Read(data.data(), count * sizeof(T));
     }
-  };
+};
 
-  class AudioCodec
-  {
-    //common
+class AudioCodec
+{
+    // common
     Logger &logger_;
     I2sBus *i2s_bus_ = nullptr;
     const audio_codec_data_if_t *i2s_data_if_ = nullptr;
     const audio_codec_gpio_if_t *i2s_gpio_if_ = nullptr;
-    //speaker
+    // speaker
     const audio_codec_ctrl_if_t *spk_audio_codec_ctrl_if_ = nullptr;
     const audio_codec_if_t *spk_audio_codec_if_ = nullptr;
     esp_codec_dev_handle_t spk_codec_dev_handle_ = nullptr;
     bool spk_enabled_ = false;
-    //microphone
+    // microphone
     const audio_codec_ctrl_if_t *mic_audio_codec_ctrl_if_ = nullptr;
     const audio_codec_if_t *mic_audio_codec_if_ = nullptr;
-    esp_codec_dev_handle_t mic_codec_dev_handle_ = nullptr;  
+    esp_codec_dev_handle_t mic_codec_dev_handle_ = nullptr;
     bool mic_enabled_ = false;
 
-  public:
+   public:
     AudioCodec(Logger &logger);
     ~AudioCodec();
 
-    Logger& GetLogger() const { return logger_; }
-    I2sBus& GetI2sBus() const { return *i2s_bus_; }
+    Logger &GetLogger() const { return logger_; }
+    I2sBus &GetI2sBus() const { return *i2s_bus_; }
 
-    const audio_codec_data_if_t * GetDataInterface() const { return i2s_data_if_; }
-    const audio_codec_gpio_if_t * GetGpioInterface() const { return i2s_gpio_if_; }
-    const audio_codec_ctrl_if_t * GetSpeakerCtrlInterface() const { return spk_audio_codec_ctrl_if_; }
-    const audio_codec_ctrl_if_t * GetMicrophoneCtrlInterface() const { return mic_audio_codec_ctrl_if_; }
+    const audio_codec_data_if_t *GetDataInterface() const { return i2s_data_if_; }
+    const audio_codec_gpio_if_t *GetGpioInterface() const { return i2s_gpio_if_; }
+    const audio_codec_ctrl_if_t *GetSpeakerCtrlInterface() const
+    {
+        return spk_audio_codec_ctrl_if_;
+    }
+    const audio_codec_ctrl_if_t *GetMicrophoneCtrlInterface() const
+    {
+        return mic_audio_codec_ctrl_if_;
+    }
 
-    void SetSpeakerCodecInterface(const audio_codec_if_t *codec_if) { spk_audio_codec_if_ = codec_if;  }
-    void SetMicrophoneCodecInterface(const audio_codec_if_t *codec_if) { mic_audio_codec_if_ = codec_if;  }
-    void SetSpeakerCodecDeviceHandle(esp_codec_dev_handle_t handle) { spk_codec_dev_handle_ = handle;  }
-    void SetMicrophoneCodecDeviceHandle(esp_codec_dev_handle_t handle) { mic_codec_dev_handle_ = handle;  }
+    void SetSpeakerCodecInterface(const audio_codec_if_t *codec_if)
+    {
+        spk_audio_codec_if_ = codec_if;
+    }
+    void SetMicrophoneCodecInterface(const audio_codec_if_t *codec_if)
+    {
+        mic_audio_codec_if_ = codec_if;
+    }
+    void SetSpeakerCodecDeviceHandle(esp_codec_dev_handle_t handle)
+    {
+        spk_codec_dev_handle_ = handle;
+    }
+    void SetMicrophoneCodecDeviceHandle(esp_codec_dev_handle_t handle)
+    {
+        mic_codec_dev_handle_ = handle;
+    }
 
     // operations
     bool Init(I2sBus &i2m_bus);
@@ -247,21 +265,21 @@ namespace wrapper
     bool Write(const void *data, size_t size);
     bool Read(void *data, size_t size);
 
-    template<typename T>
-    bool Write(const std::vector<T>& data)
+    template <typename T>
+    bool Write(const std::vector<T> &data)
     {
         return Write(data.data(), data.size() * sizeof(T));
     }
 
-    template<typename T>
-    bool Read(std::vector<T>& data, size_t count)
+    template <typename T>
+    bool Read(std::vector<T> &data, size_t count)
     {
         data.resize(count);
         return Read(data.data(), count * sizeof(T));
     }
-    
+
     bool TestSpeaker();
     bool TestMicrophone();
-  };
+};
 
-} // namespace wrapper
+}  // namespace wrapper

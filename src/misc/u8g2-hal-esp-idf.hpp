@@ -6,29 +6,27 @@
 
 namespace wrapper
 {
-    struct U8g2PortConfig : 
-    {
+struct U8g2PortConfig:
+{
+};
 
-    };
+class U8g2Port
+{
+    Logger& logger_;
+    u8g2_t u8g2_;
+    bool initialized_;
 
-    class U8g2Port
-    {
+    uint8_t I2cByteCallback(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr);
+    uint8_t SpiByteCallback(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr);
+    uint8_t GpioAndDelayCallback(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr);
 
-        Logger& logger_;
-        u8g2_t u8g2_;
-        bool initialized_;
+   public:
+    U8g2Port(Logger& logger);
+    ~U8g2Port();
 
-        uint8_t I2cByteCallback(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr);
-        uint8_t SpiByteCallback(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr);
-        uint8_t GpioAndDelayCallback(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr);
+    bool Init(const U8g2PortConfig& config);
+    bool Deinit();
+    u8g2_t* GetU8g2() { return &u8g2_; }
+};
 
-    public:
-        U8g2Port(Logger &logger);
-        ~U8g2Port();
-
-        bool Init(const U8g2PortConfig &config);
-        bool Deinit();
-        u8g2_t* GetU8g2() { return &u8g2_; }
-    };
-
-} // namespace wrapper
+}  // namespace wrapper

@@ -5,15 +5,17 @@
 #include "wrapper/touch.hpp"
 #include "esp_lcd_touch_gt911.h"
 
-namespace wrapper {
+namespace wrapper
+{
 
-class Gt911 : public I2cTouch {
-public:
-    using I2cTouch::I2cTouch; // Inherit constructor
+class Gt911 : public I2cTouch
+{
+   public:
+    using I2cTouch::I2cTouch;  // Inherit constructor
 
     bool Init(const I2cBus& bus, const I2cTouchConfig& config);
 };
 
-} // namespace wrapper
+}  // namespace wrapper
 
 #endif

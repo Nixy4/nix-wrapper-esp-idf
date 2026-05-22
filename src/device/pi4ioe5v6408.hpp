@@ -11,19 +11,19 @@ namespace wrapper
 
 /**
  * @brief PI4IOE5V6408 I2C IO Expander wrapper class
- * 
+ *
  * 8-bit I2C-bus and SMBus I/O port with interrupt and reset
  */
 class Pi4ioe5v6408
 {
-private:
+   private:
     Logger &m_logger;
     esp_io_expander_handle_t m_handle;
     uint8_t m_dev_addr;
 
-public:
-    static constexpr uint8_t ADDR_LOW = ESP_IO_EXPANDER_I2C_PI4IOE5V6408_ADDRESS_LOW;   // 0x43
-    static constexpr uint8_t ADDR_HIGH = ESP_IO_EXPANDER_I2C_PI4IOE5V6408_ADDRESS_HIGH; // 0x44
+   public:
+    static constexpr uint8_t ADDR_LOW = ESP_IO_EXPANDER_I2C_PI4IOE5V6408_ADDRESS_LOW;    // 0x43
+    static constexpr uint8_t ADDR_HIGH = ESP_IO_EXPANDER_I2C_PI4IOE5V6408_ADDRESS_HIGH;  // 0x44
     static constexpr uint32_t DEFAULT_SPEED = 400000;
 
     Pi4ioe5v6408(Logger &logger);
@@ -41,6 +41,6 @@ public:
     bool PrintState();
 };
 
-} // namespace wrapper
+}  // namespace wrapper
 
-#endif // __has_include("esp_io_expander.h")
+#endif  // __has_include("esp_io_expander.h")

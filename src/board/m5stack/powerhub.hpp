@@ -4,9 +4,8 @@
 #include <vector>
 #include <cstdint>
 
-namespace wrapper {
-
-
+namespace wrapper
+{
 
 class PowerHub
 {
@@ -18,8 +17,7 @@ class PowerHub
     PowerHub(PowerHub&&) = delete;
     PowerHub& operator=(PowerHub&&) = delete;
 
-public:
-
+   public:
     PowerHub& GetInstance()
     {
         static PowerHub instance;
@@ -27,4 +25,4 @@ public:
     }
 };
 
-} // namespace wrapper
+}  // namespace wrapper

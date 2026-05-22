@@ -8,9 +8,9 @@
 namespace wrapper
 {
 
-class Logger 
+class Logger
 {
-private:
+   private:
     std::string prefix_{"| "};
     std::string separator_{" | "};
     std::string suffix_{" |"};
@@ -19,57 +19,65 @@ private:
 
     void RebuildTags();
 
-public:
+   public:
     Logger();
-    Logger(const std::string& tags); // Add this constructor
-    template<typename... Tags>
-    Logger(const Tags&... tags) : Logger() {
+    Logger(const std::string& tags);  // Add this constructor
+    template <typename... Tags>
+    Logger(const Tags&... tags) : Logger()
+    {
         SetTags(tags...);
     }
     ~Logger();
-    
+
     void SetPrefix(const std::string& prefix);
     void SetSeparator(const std::string& separator);
     void SetSuffix(const std::string& suffix);
-    
+
     // Variadic template for multiple string tags
-    template<typename... Tags>
-    void SetTags(Tags&&... tags) {
+    template <typename... Tags>
+    void SetTags(Tags&&... tags)
+    {
         tags_list_.clear();
         tags_list_.reserve(sizeof...(tags));
         (tags_list_.push_back(std::forward<Tags>(tags)), ...);
         RebuildTags();
     }
-    
+
     void SetTags(const std::vector<std::string>& tags);
     void SetTags(const std::initializer_list<std::string>& tags);
     void SetTag(int index, const std::string& tag);
     void ClearTags();
 
-    template<typename... Args>
-    void Verbose(const char* fmt, Args&&... args) {
+    template <typename... Args>
+    void Verbose(const char* fmt, Args&&... args)
+    {
         ESP_LOGV(tags_.c_str(), fmt, std::forward<Args>(args)...);
     }
-    template<typename... Args>
-    void Debug(const char* fmt, Args&&... args) {
+    template <typename... Args>
+    void Debug(const char* fmt, Args&&... args)
+    {
         ESP_LOGD(tags_.c_str(), fmt, std::forward<Args>(args)...);
     }
-    template<typename... Args>
-    void Info(const char* fmt, Args&&... args) {
+    template <typename... Args>
+    void Info(const char* fmt, Args&&... args)
+    {
         ESP_LOGI(tags_.c_str(), fmt, std::forward<Args>(args)...);
     }
-    template<typename... Args>
-    void Warning(const char* fmt, Args&&... args) {
+    template <typename... Args>
+    void Warning(const char* fmt, Args&&... args)
+    {
         ESP_LOGW(tags_.c_str(), fmt, std::forward<Args>(args)...);
     }
-    template<typename... Args>
-    void Error(const char* fmt, Args&&... args) {
+    template <typename... Args>
+    void Error(const char* fmt, Args&&... args)
+    {
         ESP_LOGE(tags_.c_str(), fmt, std::forward<Args>(args)...);
     }
-    template<typename... Args>
-    void Fatal(const char* fmt, Args&&... args) {
+    template <typename... Args>
+    void Fatal(const char* fmt, Args&&... args)
+    {
         ESP_LOGE(tags_.c_str(), fmt, std::forward<Args>(args)...);
     }
 };
 
-} // namespace wrapper
+}  // namespace wrapper

@@ -6,7 +6,7 @@ namespace wrapper
 
 class Ip5306 : public I2cDevice
 {
-public:
+   public:
     static constexpr uint8_t I2C_ADDR_DEFAULT = 0x75;
     static constexpr uint32_t I2C_SPEED_HZ = 100000;
 
@@ -23,7 +23,7 @@ public:
 
     static constexpr uint8_t REG_READ0 = 0x70;
     static constexpr uint8_t REG_READ0_BIT_CHARGE_EN = 3;  // 充电使能标志
-    
+
     static constexpr uint8_t REG_READ1 = 0x71;
     static constexpr uint8_t REG_READ1_BIT_CHARGE_STATUS = 3;
 
@@ -33,15 +33,13 @@ public:
     // Charger voltage cutoff settings (REG_CHARGER_CTL0 bits 1:0)
     enum class ChargerVoltage : uint8_t
     {
-        V_4_14_4_26_4_305_4_35 = 0b00,  // 建议使用
-        V_4_17_4_275_4_32_4_365 = 0b01, // 建议使用
-        V_4_185_4_29_4_335_4_38 = 0b10, // 默认值
+        V_4_14_4_26_4_305_4_35 = 0b00,   // 建议使用
+        V_4_17_4_275_4_32_4_365 = 0b01,  // 建议使用
+        V_4_185_4_29_4_335_4_38 = 0b10,  // 默认值
         V_4_2_4_305_4_35_4_395 = 0b11
     };
 
-    Ip5306(Logger &logger) : I2cDevice(logger)
-    {
-    }
+    Ip5306(Logger &logger) : I2cDevice(logger) {}
 
     ~Ip5306() = default;
 
@@ -51,7 +49,6 @@ public:
     bool SetChargerVoltage(ChargerVoltage voltage);
 
     ChargerVoltage GetChargerVoltage();
-
 };
 
-} // namespace wrapper
+}  // namespace wrapper

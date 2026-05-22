@@ -7,7 +7,7 @@ namespace wrapper
 
 class Aw9523 : public I2cDevice
 {
-public:
+   public:
     static constexpr uint8_t DEFAULT_ADDR = 0x58;
     static constexpr uint32_t DEFAULT_SPEED = 400000;
 
@@ -15,4 +15,4 @@ public:
     ~Aw9523();
 };
 
-} // namespace wrapper
+}  // namespace wrapper

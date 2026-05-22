@@ -18,22 +18,11 @@ struct SpiBusConfig : public spi_bus_config_t
     spi_host_device_t host_id;
     spi_dma_chan_t dma_chan;
 
-    SpiBusConfig(spi_host_device_t host,
-                 int mosi,
-                 int miso,
-                 int sclk,
-                 int quadwp,
-                 int quadhd,
-                 int data4,
-                 int data5,
-                 int data6,
-                 int data7,
-                 bool data_default_level,
-                 int max_transfer,
-                 uint32_t bus_flags,
-                 esp_intr_cpu_affinity_t isr_cpu,
-                 int intr_flag,
-                 spi_dma_chan_t dma) : spi_bus_config_t{}
+    SpiBusConfig(spi_host_device_t host, int mosi, int miso, int sclk, int quadwp, int quadhd,
+                 int data4, int data5, int data6, int data7, bool data_default_level,
+                 int max_transfer, uint32_t bus_flags, esp_intr_cpu_affinity_t isr_cpu,
+                 int intr_flag, spi_dma_chan_t dma)
+        : spi_bus_config_t{}
     {
         mosi_io_num = mosi;
         miso_io_num = miso;
@@ -62,7 +51,7 @@ class SpiBus
     bool initialized_;
     SpiBusConfig config_;
 
-public:
+   public:
     SpiBus(Logger& logger);
     ~SpiBus();
     Logger& GetLogger();
@@ -75,7 +64,8 @@ public:
 
 struct SpiDeviceConfig : public spi_device_interface_config_t
 {
-    SpiDeviceConfig(gpio_num_t cs, int clock_speed_hz, uint8_t mode) : spi_device_interface_config_t{}
+    SpiDeviceConfig(gpio_num_t cs, int clock_speed_hz, uint8_t mode)
+        : spi_device_interface_config_t{}
     {
         command_bits = 0;
         address_bits = 0;
@@ -96,11 +86,11 @@ struct SpiDeviceConfig : public spi_device_interface_config_t
 
 class SpiDevice
 {
-protected:
+   protected:
     Logger& logger_;
     spi_device_handle_t dev_handle_;
 
-public:
+   public:
     SpiDevice(Logger& logger);
     ~SpiDevice();
     Logger& GetLogger();
@@ -110,7 +100,7 @@ public:
 
     // --- raw pointer variants (inline) ---
 
-    inline bool Transfer(const uint8_t *tx_data, uint8_t *rx_data, size_t len)
+    inline bool Transfer(const uint8_t* tx_data, uint8_t* rx_data, size_t len)
     {
         spi_transaction_t t = {};
         t.length = len * 8;
@@ -119,7 +109,7 @@ public:
         return spi_device_transmit(dev_handle_, &t) == ESP_OK;
     }
 
-    inline bool Write(const uint8_t *data, size_t len)
+    inline bool Write(const uint8_t* data, size_t len)
     {
         spi_transaction_t t = {};
         t.length = len * 8;
@@ -128,7 +118,7 @@ public:
         return spi_device_transmit(dev_handle_, &t) == ESP_OK;
     }
 
-    inline bool Read(uint8_t *rx_data, size_t len)
+    inline bool Read(uint8_t* rx_data, size_t len)
     {
         spi_transaction_t t = {};
         t.length = len * 8;
@@ -165,4 +155,4 @@ public:
     bool ReadRegBits(uint8_t reg_addr, uint8_t mask, uint8_t& value);
 };
 
-} // namespace wrapper
+}  // namespace wrapper
