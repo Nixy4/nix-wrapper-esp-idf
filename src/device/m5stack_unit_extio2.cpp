@@ -3,7 +3,7 @@
 namespace wrapper
 {
 
-bool UnitExtio2::Init(const I2cBus &bus)
+bool UnitExtio2::Init(const I2cBus& bus)
 {
     I2cDeviceConfig cfg = I2cDeviceConfig(I2C_ADDR_DEFAULT, I2C_SPEED_HZ);
     return I2cDevice::Init(bus, cfg) == true;
@@ -46,7 +46,7 @@ bool UnitExtio2::SetDigitalOutputs(uint8_t states)
     return WriteReg8(Reg::OUTPUTS_CTL, states, 1000) == true;
 }
 
-bool UnitExtio2::GetDigitalInput(int pin, bool &state)
+bool UnitExtio2::GetDigitalInput(int pin, bool& state)
 {
     uint8_t input_state = 0xFF;
     bool ret = ReadReg8(REG_DIGITAL_INPUT_IO(pin), input_state, 1000);

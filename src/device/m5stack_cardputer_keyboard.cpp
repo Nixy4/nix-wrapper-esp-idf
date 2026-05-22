@@ -70,7 +70,7 @@ const KeyValue Keyboard::kKeyValueMap[4][14] = {
 
 Keyboard::Keyboard() : is_caps_locked_(false) {}
 
-KeyValue Keyboard::GetKeyValue(const Point2D &key_coor) const
+KeyValue Keyboard::GetKeyValue(const Point2D& key_coor) const
 {
     return kKeyValueMap[key_coor.y][key_coor.x];
 }
@@ -102,7 +102,7 @@ uint8_t Keyboard::GetInput()
     return buffer;
 }
 
-void Keyboard::Init(const KeyboardConfig &config)
+void Keyboard::Init(const KeyboardConfig& config)
 {
     input_list_ = config.input_pins;
     output_list_ = config.output_pins;
@@ -227,7 +227,7 @@ bool Keyboard::IsKeyPressing(int key_num) const
 {
     if (key_list_buffer_.size())
     {
-        for (const auto &i : key_list_buffer_)
+        for (const auto& i : key_list_buffer_)
         {
             if (GetKeyNum(i) == key_num)
                 return true;
@@ -242,10 +242,10 @@ void Keyboard::UpdateKeysState()
     key_values_without_special_keys_.clear();
 
     // Get special keys
-    for (auto &i : key_list_buffer_)
+    for (auto& i : key_list_buffer_)
     {
         int key_code = GetKeyValue(i).value_num_first;
-        const char *key_str =
+        const char* key_str =
             GetKeyValue(i).value_first;  // Fallback for fn/opt which have 0 key_code
 
         if (key_code == KeyCode::KEY_TAB)
@@ -301,7 +301,7 @@ void Keyboard::UpdateKeysState()
     }
 
     // Deal what left
-    for (auto &i : key_values_without_special_keys_)
+    for (auto& i : key_values_without_special_keys_)
     {
         if (keys_state_buffer_.ctrl || keys_state_buffer_.shift || is_caps_locked_)
         {

@@ -16,15 +16,15 @@ struct Point2D
     int8_t x;
     int8_t y;
 
-    bool operator==(const Point2D &other) const { return x == other.x && y == other.y; }
-    bool operator!=(const Point2D &other) const { return !(*this == other); }
+    bool operator==(const Point2D& other) const { return x == other.x && y == other.y; }
+    bool operator!=(const Point2D& other) const { return !(*this == other); }
 };
 
 struct KeyValue
 {
-    const char *value_first;
+    const char* value_first;
     const int value_num_first;
-    const char *value_second;
+    const char* value_second;
     const int value_num_second;
 };
 
@@ -233,7 +233,7 @@ class Keyboard
     Keyboard();
     ~Keyboard() = default;
 
-    void Init(const KeyboardConfig &config);
+    void Init(const KeyboardConfig& config);
 
     // Main update loop
     void Update();
@@ -241,11 +241,11 @@ class Keyboard
     Point2D GetKey();  // Kept for backward compatibility, but consider deprecating
     uint8_t GetKeyNum(Point2D key_coor) const;
 
-    inline const std::vector<Point2D> &GetKeyList() const { return key_list_buffer_; }
-    KeyValue GetKeyValue(const Point2D &key_coor) const;
+    inline const std::vector<Point2D>& GetKeyList() const { return key_list_buffer_; }
+    KeyValue GetKeyValue(const Point2D& key_coor) const;
     bool IsKeyPressing(int key_num) const;
 
-    inline const KeyState &GetKeysState() const { return keys_state_buffer_; }
+    inline const KeyState& GetKeysState() const { return keys_state_buffer_; }
 
     inline bool IsCapsLocked(void) const { return is_caps_locked_; }
     inline void SetCapsLocked(bool is_locked) { is_caps_locked_ = is_locked; }

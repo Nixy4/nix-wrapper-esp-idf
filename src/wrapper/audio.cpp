@@ -5,10 +5,10 @@ namespace wrapper
 {
 
 // Speaker Implementation
-Speaker::Speaker(Logger &logger) : logger_(logger) {}
+Speaker::Speaker(Logger& logger) : logger_(logger) {}
 Speaker::~Speaker() {}
 
-bool Speaker::Init(I2sBus &i2s_bus)
+bool Speaker::Init(I2sBus& i2s_bus)
 {
     i2s_bus_ = &i2s_bus;
     volume_ = 1.0f;
@@ -47,7 +47,7 @@ bool Speaker::Disable()
     return i2s_bus_->DisableTxChannel();
 }
 
-bool Speaker::IsEnabled(bool &enable)
+bool Speaker::IsEnabled(bool& enable)
 {
     // We don't track enabled state in Speaker class currently,
     // but we can query I2sBus or assume true if Init called?
@@ -75,7 +75,7 @@ bool Speaker::IsEnabled(bool &enable)
     return true;
 }
 
-bool Speaker::Write(const void *data, size_t size)
+bool Speaker::Write(const void* data, size_t size)
 {
     if (i2s_bus_ == nullptr)
         return false;
@@ -100,7 +100,7 @@ bool Speaker::Write(const void *data, size_t size)
         buffer.resize(size / 2);
         memcpy(buffer.data(), data, size);
 
-        for (auto &sample : buffer)
+        for (auto& sample : buffer)
         {
             sample = (int16_t)(sample * volume_);
         }
@@ -113,10 +113,10 @@ bool Speaker::Write(const void *data, size_t size)
 }
 
 // Microphone Implementation
-Microphone::Microphone(Logger &logger) : logger_(logger) {}
+Microphone::Microphone(Logger& logger) : logger_(logger) {}
 Microphone::~Microphone() {}
 
-bool Microphone::Init(I2sBus &i2s_bus)
+bool Microphone::Init(I2sBus& i2s_bus)
 {
     i2s_bus_ = &i2s_bus;
     volume_ = 1.0f;
@@ -154,13 +154,13 @@ bool Microphone::Disable()
     return i2s_bus_->DisableRxChannel();
 }
 
-bool Microphone::IsEnabled(bool &enable)
+bool Microphone::IsEnabled(bool& enable)
 {
     enable = true;  // See Speaker notes
     return true;
 }
 
-bool Microphone::Read(void *data, size_t size)
+bool Microphone::Read(void* data, size_t size)
 {
     if (i2s_bus_ == nullptr)
         return false;
@@ -172,7 +172,7 @@ bool Microphone::Read(void *data, size_t size)
     {
         // Apply software processing
         // Assuming 16-bit
-        int16_t *buffer = (int16_t *)data;
+        int16_t* buffer = (int16_t*)data;
         size_t num_samples = read / 2;
 
         if (mute_ || volume_ == 0.0f)
@@ -191,10 +191,10 @@ bool Microphone::Read(void *data, size_t size)
 }
 
 // SpeakerCodec Implementation
-SpeakerCodec::SpeakerCodec(Logger &logger) : logger_(logger) {}
+SpeakerCodec::SpeakerCodec(Logger& logger) : logger_(logger) {}
 SpeakerCodec::~SpeakerCodec() {}
 
-bool SpeakerCodec::Init(I2sBus &i2s_bus)
+bool SpeakerCodec::Init(I2sBus& i2s_bus)
 {
     i2s_bus_ = &i2s_bus;
     if (i2s_data_if_ == nullptr)
@@ -223,7 +223,7 @@ bool SpeakerCodec::Init(I2sBus &i2s_bus)
     return true;
 }
 
-bool SpeakerCodec::AddSpeaker(I2cBus &i2c_bus, uint8_t addr,
+bool SpeakerCodec::AddSpeaker(I2cBus& i2c_bus, uint8_t addr,
                               std::function<esp_err_t()> codec_new_func)
 {
     if (spk_codec_dev_handle_ != nullptr)
@@ -251,7 +251,7 @@ bool SpeakerCodec::SetVolume(int vol)
     esp_err_t ret = esp_codec_dev_set_out_vol(spk_codec_dev_handle_, vol);
     return ret == ESP_OK;
 }
-bool SpeakerCodec::GetVolume(int &vol)
+bool SpeakerCodec::GetVolume(int& vol)
 {
     return esp_codec_dev_get_out_vol(spk_codec_dev_handle_, &vol) == ESP_OK;
 }
@@ -259,7 +259,7 @@ bool SpeakerCodec::SetMute(bool mute)
 {
     return esp_codec_dev_set_out_mute(spk_codec_dev_handle_, mute) == ESP_OK;
 }
-bool SpeakerCodec::IsMuted(bool &mute)
+bool SpeakerCodec::IsMuted(bool& mute)
 {
     return esp_codec_dev_get_out_mute(spk_codec_dev_handle_, &mute) == ESP_OK;
 }
@@ -294,21 +294,21 @@ bool SpeakerCodec::Disable()
     }
     return false;
 }
-bool SpeakerCodec::IsEnabled(bool &enable)
+bool SpeakerCodec::IsEnabled(bool& enable)
 {
     enable = spk_enabled_;
     return true;
 }
-bool SpeakerCodec::Write(const void *data, size_t size)
+bool SpeakerCodec::Write(const void* data, size_t size)
 {
-    return esp_codec_dev_write(spk_codec_dev_handle_, (void *)data, size) == ESP_OK;
+    return esp_codec_dev_write(spk_codec_dev_handle_, (void*)data, size) == ESP_OK;
 }
 
 // MicrophoneCodec Implementation
-MicrophoneCodec::MicrophoneCodec(Logger &logger) : logger_(logger) {}
+MicrophoneCodec::MicrophoneCodec(Logger& logger) : logger_(logger) {}
 MicrophoneCodec::~MicrophoneCodec() {}
 
-bool MicrophoneCodec::Init(I2sBus &i2s_bus)
+bool MicrophoneCodec::Init(I2sBus& i2s_bus)
 {
     i2s_bus_ = &i2s_bus;
     if (i2s_data_if_ == nullptr)
@@ -337,7 +337,7 @@ bool MicrophoneCodec::Init(I2sBus &i2s_bus)
     return true;
 }
 
-bool MicrophoneCodec::AddMicrophone(I2cBus &i2c_bus, uint8_t addr,
+bool MicrophoneCodec::AddMicrophone(I2cBus& i2c_bus, uint8_t addr,
                                     std::function<esp_err_t()> codec_new_func)
 {
     if (mic_codec_dev_handle_ != nullptr)
@@ -361,7 +361,7 @@ bool MicrophoneCodec::SetGain(float gain)
 {
     return esp_codec_dev_set_in_gain(mic_codec_dev_handle_, gain) == ESP_OK;
 }
-bool MicrophoneCodec::GetGain(float &gain)
+bool MicrophoneCodec::GetGain(float& gain)
 {
     return esp_codec_dev_get_in_gain(mic_codec_dev_handle_, &gain) == ESP_OK;
 }
@@ -369,7 +369,7 @@ bool MicrophoneCodec::SetMute(bool mute)
 {
     return esp_codec_dev_set_in_mute(mic_codec_dev_handle_, mute) == ESP_OK;
 }
-bool MicrophoneCodec::IsMuted(bool &mute)
+bool MicrophoneCodec::IsMuted(bool& mute)
 {
     return esp_codec_dev_get_in_mute(mic_codec_dev_handle_, &mute) == ESP_OK;
 }
@@ -404,21 +404,21 @@ bool MicrophoneCodec::Disable()
     }
     return false;
 }
-bool MicrophoneCodec::IsEnabled(bool &enable)
+bool MicrophoneCodec::IsEnabled(bool& enable)
 {
     enable = mic_enabled_;
     return true;
 }
-bool MicrophoneCodec::Read(void *data, size_t size)
+bool MicrophoneCodec::Read(void* data, size_t size)
 {
     return esp_codec_dev_read(mic_codec_dev_handle_, data, size) == ESP_OK;
 }
 
-AudioCodec::AudioCodec(Logger &logger) : logger_(logger) {}
+AudioCodec::AudioCodec(Logger& logger) : logger_(logger) {}
 
 AudioCodec::~AudioCodec() {}
 
-bool AudioCodec::Init(I2sBus &i2s_bus)
+bool AudioCodec::Init(I2sBus& i2s_bus)
 {
     if (i2s_data_if_ == nullptr)
     {
@@ -452,7 +452,7 @@ bool AudioCodec::Init(I2sBus &i2s_bus)
     return true;
 }
 
-bool AudioCodec::AddSpeaker(I2cBus &i2c_bus, uint8_t addr,
+bool AudioCodec::AddSpeaker(I2cBus& i2c_bus, uint8_t addr,
                             std::function<esp_err_t()> codec_new_func)
 {
     if (spk_codec_dev_handle_ != nullptr)
@@ -478,7 +478,7 @@ bool AudioCodec::AddSpeaker(I2cBus &i2c_bus, uint8_t addr,
     return true;
 }
 
-bool AudioCodec::AddMicrophone(I2cBus &i2c_bus, uint8_t addr,
+bool AudioCodec::AddMicrophone(I2cBus& i2c_bus, uint8_t addr,
                                std::function<esp_err_t()> codec_new_func)
 {
     esp_err_t err;
@@ -517,7 +517,7 @@ bool AudioCodec::SetSpeakerVolume(int vol)
     return true;
 }
 
-bool AudioCodec::GetSpeakerVolume(int &vol)
+bool AudioCodec::GetSpeakerVolume(int& vol)
 {
     esp_err_t ret = esp_codec_dev_get_out_vol(spk_codec_dev_handle_, &vol);
     if (ret != ESP_OK)
@@ -539,7 +539,7 @@ bool AudioCodec::SetSpeakerMute(bool mute)
     return true;
 }
 
-bool AudioCodec::IsSpeakerMuted(bool &mute)
+bool AudioCodec::IsSpeakerMuted(bool& mute)
 {
     esp_err_t ret = esp_codec_dev_get_out_mute(spk_codec_dev_handle_, &mute);
     if (ret != ESP_OK)
@@ -561,7 +561,7 @@ bool AudioCodec::SetMicrophoneGain(float gain)
     return true;
 }
 
-bool AudioCodec::GetMicrophoneGain(float &gain)
+bool AudioCodec::GetMicrophoneGain(float& gain)
 {
     esp_err_t ret = esp_codec_dev_get_in_gain(mic_codec_dev_handle_, &gain);
     if (ret != ESP_OK)
@@ -610,7 +610,7 @@ bool AudioCodec::TestSpeaker()
     // Allocate buffer for 1 second of audio
     // 16-bit (2 bytes) * 2 channels * num_samples
     size_t buffer_size = num_samples * num_channels * sizeof(int16_t);
-    int16_t *buffer = (int16_t *)malloc(buffer_size);
+    int16_t* buffer = (int16_t*)malloc(buffer_size);
     if (buffer == nullptr)
     {
         logger_.Error("Failed to allocate memory for speaker test");
@@ -662,7 +662,7 @@ bool AudioCodec::TestMicrophone()
     const int bytes_per_sample = sizeof(int16_t);
 
     size_t buffer_size = sample_rate * duration_sec * num_channels * bytes_per_sample;
-    int16_t *buffer = (int16_t *)malloc(buffer_size);
+    int16_t* buffer = (int16_t*)malloc(buffer_size);
 
     if (buffer == nullptr)
     {
@@ -697,7 +697,7 @@ bool AudioCodec::TestMicrophone()
     return (ret == ESP_OK);
 }
 
-bool AudioCodec::IsMicrophoneMuted(bool &mute)
+bool AudioCodec::IsMicrophoneMuted(bool& mute)
 {
     esp_err_t ret = esp_codec_dev_get_in_mute(mic_codec_dev_handle_, &mute);
     if (ret != ESP_OK)
@@ -750,7 +750,7 @@ bool AudioCodec::EnableSpeaker(bool enable)
     }
 }
 
-bool AudioCodec::IsSpeakerEnabled(bool &enable)
+bool AudioCodec::IsSpeakerEnabled(bool& enable)
 {
     enable = spk_enabled_;
     return true;
@@ -798,15 +798,15 @@ bool AudioCodec::EnableMicrophone(bool enable)
     }
 }
 
-bool AudioCodec::IsMicrophoneEnabled(bool &enable)
+bool AudioCodec::IsMicrophoneEnabled(bool& enable)
 {
     enable = mic_enabled_;
     return true;
 }
 
-bool AudioCodec::Write(const void *data, size_t size)
+bool AudioCodec::Write(const void* data, size_t size)
 {
-    esp_err_t ret = esp_codec_dev_write(spk_codec_dev_handle_, (void *)data, size);
+    esp_err_t ret = esp_codec_dev_write(spk_codec_dev_handle_, (void*)data, size);
     if (ret != ESP_OK)
     {
         logger_.Error("Failed to write audio data: %s", esp_err_to_name(ret));
@@ -815,7 +815,7 @@ bool AudioCodec::Write(const void *data, size_t size)
     return true;
 }
 
-bool AudioCodec::Read(void *data, size_t size)
+bool AudioCodec::Read(void* data, size_t size)
 {
     esp_err_t ret = esp_codec_dev_read(mic_codec_dev_handle_, data, size);
     if (ret != ESP_OK)

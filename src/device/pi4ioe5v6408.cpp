@@ -5,11 +5,11 @@
 namespace wrapper
 {
 
-Pi4ioe5v6408::Pi4ioe5v6408(Logger &logger) : m_logger(logger) {}
+Pi4ioe5v6408::Pi4ioe5v6408(Logger& logger) : m_logger(logger) {}
 
 Pi4ioe5v6408::~Pi4ioe5v6408() { Deinit(); }
 
-bool Pi4ioe5v6408::Init(const I2cBus &bus, uint8_t dev_addr)
+bool Pi4ioe5v6408::Init(const I2cBus& bus, uint8_t dev_addr)
 {
     if (m_handle != nullptr)
     {
@@ -84,7 +84,7 @@ bool Pi4ioe5v6408::SetLevel(uint32_t io_num, uint32_t level)
     return true;
 }
 
-bool Pi4ioe5v6408::GetLevel(uint32_t io_num, uint32_t *level)
+bool Pi4ioe5v6408::GetLevel(uint32_t io_num, uint32_t* level)
 {
     if (m_handle == nullptr)
     {

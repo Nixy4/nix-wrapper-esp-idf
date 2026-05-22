@@ -39,11 +39,11 @@ class Ip5306 : public I2cDevice
         V_4_2_4_305_4_35_4_395 = 0b11
     };
 
-    Ip5306(Logger &logger) : I2cDevice(logger) {}
+    Ip5306(Logger& logger) : I2cDevice(logger) {}
 
     ~Ip5306() = default;
 
-    bool Init(const I2cBus &bus);
+    bool Init(const I2cBus& bus);
     bool GetChargingStatus();
 
     bool SetChargerVoltage(ChargerVoltage voltage);

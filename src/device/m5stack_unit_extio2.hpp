@@ -99,11 +99,11 @@ class UnitExtio2 : public I2cDevice
         BITS12 = 1
     };
 
-    UnitExtio2(Logger &logger) : I2cDevice(logger) {}
+    UnitExtio2(Logger& logger) : I2cDevice(logger) {}
 
     ~UnitExtio2() = default;
 
-    bool Init(const I2cBus &bus);
+    bool Init(const I2cBus& bus);
 
     void SetMode(int pin, Mode mode);
 
@@ -114,7 +114,7 @@ class UnitExtio2 : public I2cDevice
     bool SetDigitalOutput(int pin, bool state);
 
     bool SetDigitalOutputs(uint8_t states);
-    bool GetDigitalInput(int pin, bool &state);
+    bool GetDigitalInput(int pin, bool& state);
 };
 
 }  // namespace wrapper

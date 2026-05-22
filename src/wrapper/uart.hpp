@@ -28,47 +28,47 @@ struct UartConfig : public uart_config_t
 
 class UartPort
 {
-    Logger &logger_;
+    Logger& logger_;
     uart_port_t port_;
     bool installed_;
     QueueHandle_t event_queue_;
 
    public:
-    UartPort(Logger &logger);
+    UartPort(Logger& logger);
     ~UartPort();
 
-    Logger &GetLogger();
+    Logger& GetLogger();
     uart_port_t GetPort() const;
     QueueHandle_t GetEventQueue() const;
     bool IsInstalled() const;
 
     // operations
-    bool Init(uart_port_t port, const UartConfig &config, int tx_pin, int rx_pin,
+    bool Init(uart_port_t port, const UartConfig& config, int tx_pin, int rx_pin,
               int rts_pin = UART_PIN_NO_CHANGE, int cts_pin = UART_PIN_NO_CHANGE,
               int rx_buffer_size = 1024, int tx_buffer_size = 0, int event_queue_size = 0);
     bool Deinit();
 
     // baudrate
     bool SetBaudrate(uint32_t baudrate);
-    bool GetBaudrate(uint32_t &baudrate);
+    bool GetBaudrate(uint32_t& baudrate);
 };
 
 class UartDevice
 {
    protected:
-    Logger &logger_;
-    UartPort *port_;
+    Logger& logger_;
+    UartPort* port_;
 
    public:
-    UartDevice(Logger &logger);
+    UartDevice(Logger& logger);
     ~UartDevice();
-    Logger &GetLogger();
-    bool Init(UartPort &port);
+    Logger& GetLogger();
+    bool Init(UartPort& port);
     bool Deinit();
 
     // --- write: raw pointer (inline) ---
 
-    inline int WriteBytes(const uint8_t *data, size_t len)
+    inline int WriteBytes(const uint8_t* data, size_t len)
     {
         return uart_write_bytes(port_->GetPort(), data, len);
     }
@@ -77,36 +77,36 @@ class UartDevice
 
     // --- write: vector / string ---
 
-    int WriteBytes(const std::vector<uint8_t> &data);
+    int WriteBytes(const std::vector<uint8_t>& data);
 
-    inline int Write(const char *str)
+    inline int Write(const char* str)
     {
         return uart_write_bytes(port_->GetPort(), str, strlen(str));
     }
 
-    inline int Write(const std::string &str)
+    inline int Write(const std::string& str)
     {
         return uart_write_bytes(port_->GetPort(), str.c_str(), str.size());
     }
 
-    int WriteLine(const std::string &line, char delimiter = '\n');
+    int WriteLine(const std::string& line, char delimiter = '\n');
 
     // --- read: raw pointer (inline) ---
 
-    inline int ReadBytes(uint8_t *buf, size_t len, int timeout_ms)
+    inline int ReadBytes(uint8_t* buf, size_t len, int timeout_ms)
     {
         return uart_read_bytes(port_->GetPort(), buf, len, pdMS_TO_TICKS(timeout_ms));
     }
 
     // --- read: single byte / vector ---
 
-    int ReadByte(uint8_t &data, int timeout_ms);
+    int ReadByte(uint8_t& data, int timeout_ms);
 
-    int ReadBytes(std::vector<uint8_t> &buf, size_t len, int timeout_ms);
+    int ReadBytes(std::vector<uint8_t>& buf, size_t len, int timeout_ms);
 
-    int ReadAvailable(std::vector<uint8_t> &buf, int timeout_ms);
+    int ReadAvailable(std::vector<uint8_t>& buf, int timeout_ms);
 
-    bool ReadLine(std::string &line, char delimiter, int timeout_ms);
+    bool ReadLine(std::string& line, char delimiter, int timeout_ms);
 
     // --- buffer control ---
     bool Flush();
@@ -118,15 +118,15 @@ class UartDevice
 class AtDevice : public UartDevice
 {
    public:
-    AtDevice(Logger &logger);
+    AtDevice(Logger& logger);
 
-    int WriteAtCmd(const char *cmd);
-    int WriteAtCmd(const std::string &cmd);
+    int WriteAtCmd(const char* cmd);
+    int WriteAtCmd(const std::string& cmd);
 
-    bool SendAtCmd(const char *cmd, std::string &response, int timeout_ms = 3000);
-    bool SendAtCmd(const std::string &cmd, std::string &response, int timeout_ms = 3000);
+    bool SendAtCmd(const char* cmd, std::string& response, int timeout_ms = 3000);
+    bool SendAtCmd(const std::string& cmd, std::string& response, int timeout_ms = 3000);
 
-    bool WaitForKeyword(const std::string &keyword, std::string &response, int timeout_ms = 3000);
+    bool WaitForKeyword(const std::string& keyword, std::string& response, int timeout_ms = 3000);
 };
 
 }  // namespace wrapper

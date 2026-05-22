@@ -4,7 +4,7 @@
 namespace wrapper
 {
 
-bool LdoRegulator::Init(const LdoChannelConfig &config)
+bool LdoRegulator::Init(const LdoChannelConfig& config)
 {
     if (channel_handle_ != nullptr)
     {

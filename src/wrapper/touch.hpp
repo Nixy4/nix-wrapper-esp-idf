@@ -17,15 +17,15 @@ struct I2cTouchConfig
     I2cTouchConfig(
         // io_config parameters
         uint16_t dev_addr, esp_lcd_panel_io_color_trans_done_cb_t on_color_trans_done,
-        void *user_ctx, unsigned int control_phase_bytes, unsigned int dc_bit_offset,
+        void* user_ctx, unsigned int control_phase_bytes, unsigned int dc_bit_offset,
         unsigned int lcd_cmd_bits, unsigned int lcd_param_bits, unsigned int dc_low_on_data,
         unsigned int disable_control_phase, uint32_t scl_speed_hz,
         // touch_config parameters
         uint16_t x_max, uint16_t y_max, gpio_num_t rst_gpio_num, gpio_num_t int_gpio_num,
         uint8_t levels_reset, uint8_t levels_interrupt, unsigned int swap_xy, unsigned int mirror_x,
         unsigned int mirror_y,
-        void (*process_coordinates)(esp_lcd_touch_handle_t tp, uint16_t *x, uint16_t *y,
-                                    uint16_t *strength, uint8_t *point_num, uint8_t max_point_num),
+        void (*process_coordinates)(esp_lcd_touch_handle_t tp, uint16_t* x, uint16_t* y,
+                                    uint16_t* strength, uint8_t* point_num, uint8_t max_point_num),
         esp_lcd_touch_interrupt_callback_t interrupt_callback)
         : io_config{}, touch_config{}
     {
@@ -58,24 +58,24 @@ struct I2cTouchConfig
 
 class I2cTouch
 {
-    Logger &logger_;
+    Logger& logger_;
     esp_lcd_panel_io_handle_t io_handle_;
     esp_lcd_touch_handle_t touch_handle_;
 
    public:
-    I2cTouch(Logger &logger);
+    I2cTouch(Logger& logger);
     ~I2cTouch();
     esp_lcd_touch_handle_t GetHandle() const { return touch_handle_; }
     // ops
-    bool Init(const I2cBus &bus, const I2cTouchConfig &config,
+    bool Init(const I2cBus& bus, const I2cTouchConfig& config,
               std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
-                                      const esp_lcd_touch_config_t *, esp_lcd_touch_handle_t *)>
+                                      const esp_lcd_touch_config_t*, esp_lcd_touch_handle_t*)>
                   new_touch_func);
     bool Deinit();
 
     bool ReadData();
-    bool GetData(esp_lcd_touch_point_data_t *data, uint8_t *point_cnt, uint8_t max_point_cnt);
-    bool GetCoordinates(uint16_t *x, uint16_t *y, uint16_t *strength, uint8_t *point_num,
+    bool GetData(esp_lcd_touch_point_data_t* data, uint8_t* point_cnt, uint8_t max_point_cnt);
+    bool GetCoordinates(uint16_t* x, uint16_t* y, uint16_t* strength, uint8_t* point_num,
                         uint8_t max_point_num);
 };
 

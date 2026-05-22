@@ -5,7 +5,7 @@ namespace wrapper
 
 // --- LedcTimer ---
 
-LedcTimer::LedcTimer(Logger &logger)
+LedcTimer::LedcTimer(Logger& logger)
     : logger_(logger),
       speed_mode_(LEDC_LOW_SPEED_MODE),
       timer_num_(LEDC_TIMER_0),
@@ -15,7 +15,7 @@ LedcTimer::LedcTimer(Logger &logger)
 
 LedcTimer::~LedcTimer() { Deinit(); }
 
-bool LedcTimer::Init(const LedcTimerConfig &config)
+bool LedcTimer::Init(const LedcTimerConfig& config)
 {
     if (initialized_)
     {
@@ -124,7 +124,7 @@ bool LedcTimer::SetFreq(uint32_t freq_hz)
 
 // --- LedcChannel ---
 
-LedcChannel::LedcChannel(Logger &logger)
+LedcChannel::LedcChannel(Logger& logger)
     : logger_(logger),
       speed_mode_(LEDC_LOW_SPEED_MODE),
       channel_(LEDC_CHANNEL_0),
@@ -134,7 +134,7 @@ LedcChannel::LedcChannel(Logger &logger)
 
 LedcChannel::~LedcChannel() { Deinit(); }
 
-bool LedcChannel::Init(const LedcChannelConfig &config)
+bool LedcChannel::Init(const LedcChannelConfig& config)
 {
     if (initialized_)
     {

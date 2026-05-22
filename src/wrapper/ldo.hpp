@@ -20,14 +20,14 @@ struct LdoChannelConfig : public esp_ldo_channel_config_t
 class LdoRegulator
 {
    private:
-    Logger &logger_;
+    Logger& logger_;
     esp_ldo_channel_handle_t channel_handle_;
 
    public:
-    LdoRegulator(Logger &logger) : logger_(logger), channel_handle_(nullptr) {}
+    LdoRegulator(Logger& logger) : logger_(logger), channel_handle_(nullptr) {}
     ~LdoRegulator() { Deinit(); }
     // operations
-    bool Init(const LdoChannelConfig &config);
+    bool Init(const LdoChannelConfig& config);
     bool Deinit();
     bool AdjustVoltage(int voltage_mv);
     esp_ldo_channel_handle_t GetHandle() const { return channel_handle_; }

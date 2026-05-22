@@ -9,18 +9,18 @@ void Delay(uint32_t milliseconds) { vTaskDelay(pdMS_TO_TICKS(milliseconds)); }
 
 void DelayTicks(uint32_t ticks) { vTaskDelay(ticks); }
 
-void DelayUntil(uint32_t *previous_wake_time, uint32_t time_increment_ms)
+void DelayUntil(uint32_t* previous_wake_time, uint32_t time_increment_ms)
 {
     vTaskDelayUntil(previous_wake_time, pdMS_TO_TICKS(time_increment_ms));
 }
 
-void DelayUntilTicks(uint32_t *previous_wake_time, uint32_t time_increment_ticks)
+void DelayUntilTicks(uint32_t* previous_wake_time, uint32_t time_increment_ticks)
 {
     vTaskDelayUntil(previous_wake_time, time_increment_ticks);
 }
 
 // Task Implementation
-Task::Task(const std::string &name, std::function<void(void *)> function, void *arg,
+Task::Task(const std::string& name, std::function<void(void*)> function, void* arg,
            uint32_t stack_depth, UBaseType_t priority)
     : name_(name),
       function_(function),
@@ -36,9 +36,9 @@ Task::~Task() {}
 bool Task::Create()
 {
     BaseType_t result = xTaskCreate(
-        [](void *pvParameters)
+        [](void* pvParameters)
         {
-            Task *task = static_cast<Task *>(pvParameters);
+            Task* task = static_cast<Task*>(pvParameters);
             task->function_(task->arg_);
             vTaskDelete(nullptr);
         },
@@ -114,14 +114,14 @@ bool Semaphore::Give()
     return xSemaphoreGive(handle_) == pdTRUE;
 }
 
-bool Semaphore::TakeFromISR(BaseType_t *pxHigherPriorityTaskWoken)
+bool Semaphore::TakeFromISR(BaseType_t* pxHigherPriorityTaskWoken)
 {
     if (handle_ == nullptr)
         return false;
     return xSemaphoreTakeFromISR(handle_, pxHigherPriorityTaskWoken) == pdTRUE;
 }
 
-bool Semaphore::GiveFromISR(BaseType_t *pxHigherPriorityTaskWoken)
+bool Semaphore::GiveFromISR(BaseType_t* pxHigherPriorityTaskWoken)
 {
     if (handle_ == nullptr)
         return false;
@@ -186,7 +186,7 @@ EventBits_t EventGroup::SetBits(const EventBits_t bits_to_set)
 }
 
 EventBits_t EventGroup::SetBitsFromISR(const EventBits_t bits_to_set,
-                                       BaseType_t *pxHigherPriorityTaskWoken)
+                                       BaseType_t* pxHigherPriorityTaskWoken)
 {
     if (handle_ == nullptr)
         return 0;

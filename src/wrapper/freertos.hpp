@@ -22,16 +22,16 @@ void Delay(uint32_t milliseconds);
 
 void DelayTicks(uint32_t ticks);
 
-void DelayUntil(uint32_t *previous_wake_time, uint32_t time_increment_ms);
+void DelayUntil(uint32_t* previous_wake_time, uint32_t time_increment_ms);
 
-void DelayUntilTicks(uint32_t *previous_wake_time, uint32_t time_increment_ticks);
+void DelayUntilTicks(uint32_t* previous_wake_time, uint32_t time_increment_ticks);
 
 class Task
 {
    protected:
     std::string name_;
-    std::function<void(void *)> function_;
-    void *arg_;
+    std::function<void(void*)> function_;
+    void* arg_;
     configSTACK_DEPTH_TYPE stack_depth_;
     UBaseType_t priority_;
     TaskHandle_t handle_;
@@ -40,7 +40,7 @@ class Task
     static constexpr uint32_t MAX_DELAY_TICK = portMAX_DELAY;
     static constexpr uint32_t MAX_DELAY_MS = pdTICKS_TO_MS(portMAX_DELAY);
 
-    Task(const std::string &name, std::function<void(void *)> function, void *arg,
+    Task(const std::string& name, std::function<void(void*)> function, void* arg,
          uint32_t stack_depth, UBaseType_t priority);
 
     ~Task();
@@ -85,70 +85,70 @@ class Queue
         }
     }
 
-    bool Send(const T &item, TickType_t wait_ticks = portMAX_DELAY)
+    bool Send(const T& item, TickType_t wait_ticks = portMAX_DELAY)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueSend(handle_, &item, wait_ticks) == pdTRUE;
     }
 
-    bool SendFromISR(const T &item, BaseType_t *pxHigherPriorityTaskWoken)
+    bool SendFromISR(const T& item, BaseType_t* pxHigherPriorityTaskWoken)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueSendFromISR(handle_, &item, pxHigherPriorityTaskWoken) == pdTRUE;
     }
 
-    bool SendToFront(const T &item, TickType_t wait_ticks = portMAX_DELAY)
+    bool SendToFront(const T& item, TickType_t wait_ticks = portMAX_DELAY)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueSendToFront(handle_, &item, wait_ticks) == pdTRUE;
     }
 
-    bool SendToFrontFromISR(const T &item, BaseType_t *pxHigherPriorityTaskWoken)
+    bool SendToFrontFromISR(const T& item, BaseType_t* pxHigherPriorityTaskWoken)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueSendToFrontFromISR(handle_, &item, pxHigherPriorityTaskWoken) == pdTRUE;
     }
 
-    bool Overwrite(const T &item)
+    bool Overwrite(const T& item)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueOverwrite(handle_, &item) == pdTRUE;
     }
 
-    bool OverwriteFromISR(const T &item, BaseType_t *pxHigherPriorityTaskWoken)
+    bool OverwriteFromISR(const T& item, BaseType_t* pxHigherPriorityTaskWoken)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueOverwriteFromISR(handle_, &item, pxHigherPriorityTaskWoken) == pdTRUE;
     }
 
-    bool Receive(T &item, TickType_t wait_ticks = portMAX_DELAY)
+    bool Receive(T& item, TickType_t wait_ticks = portMAX_DELAY)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueReceive(handle_, &item, wait_ticks) == pdTRUE;
     }
 
-    bool ReceiveFromISR(T &item, BaseType_t *pxHigherPriorityTaskWoken)
+    bool ReceiveFromISR(T& item, BaseType_t* pxHigherPriorityTaskWoken)
     {
         if (handle_ == nullptr)
             return false;
         return xQueueReceiveFromISR(handle_, &item, pxHigherPriorityTaskWoken) == pdTRUE;
     }
 
-    bool Peek(T &item, TickType_t wait_ticks = portMAX_DELAY)
+    bool Peek(T& item, TickType_t wait_ticks = portMAX_DELAY)
     {
         if (handle_ == nullptr)
             return false;
         return xQueuePeek(handle_, &item, wait_ticks) == pdTRUE;
     }
 
-    bool PeekFromISR(T &item)
+    bool PeekFromISR(T& item)
     {
         if (handle_ == nullptr)
             return false;
@@ -217,9 +217,9 @@ class Semaphore
 
     bool Give();
 
-    bool TakeFromISR(BaseType_t *pxHigherPriorityTaskWoken);
+    bool TakeFromISR(BaseType_t* pxHigherPriorityTaskWoken);
 
-    bool GiveFromISR(BaseType_t *pxHigherPriorityTaskWoken);
+    bool GiveFromISR(BaseType_t* pxHigherPriorityTaskWoken);
 
     SemaphoreHandle_t GetHandle() const;
 
@@ -269,7 +269,7 @@ class EventGroup
     EventBits_t SetBits(const EventBits_t bits_to_set);
 
     EventBits_t SetBitsFromISR(const EventBits_t bits_to_set,
-                               BaseType_t *pxHigherPriorityTaskWoken);
+                               BaseType_t* pxHigherPriorityTaskWoken);
 
     EventBits_t ClearBits(const EventBits_t bits_to_clear);
 
@@ -291,7 +291,7 @@ class EventGroup
  */
 struct ServiceConfig
 {
-    const char *name = "Service";
+    const char* name = "Service";
     uint32_t stack_size = 4096;
     UBaseType_t priority = 5;
     BaseType_t core_id = 1;  // 0, 1, or tskNO_AFFINITY
@@ -323,15 +323,15 @@ class Service
     virtual ~Service() { Stop(); }
 
     // Disable copy/move to prevent resource issues
-    Service(const Service &) = delete;
-    Service &operator=(const Service &) = delete;
+    Service(const Service&) = delete;
+    Service& operator=(const Service&) = delete;
 
     /**
      * @brief Start the service task
      * @param config Service configuration
      * @return true if started successfully
      */
-    bool Start(const ServiceConfig &config)
+    bool Start(const ServiceConfig& config)
     {
         if (state_ != State::Stopped)
         {
@@ -404,7 +404,7 @@ class Service
      * @param wait_ms Max time to wait in ms (-1 for portMAX_DELAY)
      * @return true if request enqueued
      */
-    bool Request(const ReqT &req, int wait_ms = -1)
+    bool Request(const ReqT& req, int wait_ms = -1)
     {
         if (state_ == State::Stopped)
             return false;
@@ -427,7 +427,7 @@ class Service
      * @param wait_ms Max time to wait in ms (-1 for portMAX_DELAY)
      * @return true if response received
      */
-    bool WaitResponse(ResT &resp, int wait_ms = -1)
+    bool WaitResponse(ResT& resp, int wait_ms = -1)
     {
         if (!response_queue_)
             return false;
@@ -452,7 +452,7 @@ class Service
      * @param req Input request
      * @return ResT Output response
      */
-    virtual ResT Process(const ReqT &req) = 0;
+    virtual ResT Process(const ReqT& req) = 0;
 
     /**
      * @brief Optional: Called when task starts
@@ -488,9 +488,9 @@ class Service
         task_handle_ = nullptr;
     }
 
-    static void TaskWrapper(void *param)
+    static void TaskWrapper(void* param)
     {
-        auto *self = static_cast<Service *>(param);
+        auto* self = static_cast<Service*>(param);
         self->Run();
         // Self-deletion
         vTaskDelete(nullptr);

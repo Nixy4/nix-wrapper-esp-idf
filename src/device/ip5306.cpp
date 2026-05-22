@@ -5,7 +5,7 @@ namespace wrapper
 
 static constexpr int I2C_TIMEOUT_MS = 100;
 
-bool Ip5306::Init(const I2cBus &bus)
+bool Ip5306::Init(const I2cBus& bus)
 {
     I2cDeviceConfig config(I2C_ADDR_DEFAULT, I2C_SPEED_HZ);
     return I2cDevice::Init(bus, config);

@@ -4,14 +4,14 @@ using namespace wrapper;
 
 // --- UartPort ---
 
-UartPort::UartPort(Logger &logger)
+UartPort::UartPort(Logger& logger)
     : logger_(logger), port_(UART_NUM_0), installed_(false), event_queue_(nullptr)
 {
 }
 
 UartPort::~UartPort() { Deinit(); }
 
-Logger &UartPort::GetLogger() { return logger_; }
+Logger& UartPort::GetLogger() { return logger_; }
 
 uart_port_t UartPort::GetPort() const { return port_; }
 
@@ -19,7 +19,7 @@ QueueHandle_t UartPort::GetEventQueue() const { return event_queue_; }
 
 bool UartPort::IsInstalled() const { return installed_; }
 
-bool UartPort::Init(uart_port_t port, const UartConfig &config, int tx_pin, int rx_pin, int rts_pin,
+bool UartPort::Init(uart_port_t port, const UartConfig& config, int tx_pin, int rx_pin, int rts_pin,
                     int cts_pin, int rx_buffer_size, int tx_buffer_size, int event_queue_size)
 {
     if (installed_)
@@ -44,7 +44,7 @@ bool UartPort::Init(uart_port_t port, const UartConfig &config, int tx_pin, int 
         return false;
     }
 
-    QueueHandle_t *queue_ptr = (event_queue_size > 0) ? &event_queue_ : nullptr;
+    QueueHandle_t* queue_ptr = (event_queue_size > 0) ? &event_queue_ : nullptr;
     ret =
         uart_driver_install(port_, rx_buffer_size, tx_buffer_size, event_queue_size, queue_ptr, 0);
     if (ret != ESP_OK)
@@ -91,7 +91,7 @@ bool UartPort::SetBaudrate(uint32_t baudrate)
     return true;
 }
 
-bool UartPort::GetBaudrate(uint32_t &baudrate)
+bool UartPort::GetBaudrate(uint32_t& baudrate)
 {
     esp_err_t ret = uart_get_baudrate(port_, &baudrate);
     if (ret != ESP_OK)
@@ -104,13 +104,13 @@ bool UartPort::GetBaudrate(uint32_t &baudrate)
 
 // --- UartDevice ---
 
-UartDevice::UartDevice(Logger &logger) : logger_(logger), port_(nullptr) {}
+UartDevice::UartDevice(Logger& logger) : logger_(logger), port_(nullptr) {}
 
 UartDevice::~UartDevice() { Deinit(); }
 
-Logger &UartDevice::GetLogger() { return logger_; }
+Logger& UartDevice::GetLogger() { return logger_; }
 
-bool UartDevice::Init(UartPort &port)
+bool UartDevice::Init(UartPort& port)
 {
     if (port_ != nullptr)
     {
@@ -140,17 +140,17 @@ bool UartDevice::Deinit()
     return true;
 }
 
-int UartDevice::WriteBytes(const std::vector<uint8_t> &data)
+int UartDevice::WriteBytes(const std::vector<uint8_t>& data)
 {
     return uart_write_bytes(port_->GetPort(), data.data(), data.size());
 }
 
-int UartDevice::ReadByte(uint8_t &data, int timeout_ms)
+int UartDevice::ReadByte(uint8_t& data, int timeout_ms)
 {
     return uart_read_bytes(port_->GetPort(), &data, 1, pdMS_TO_TICKS(timeout_ms));
 }
 
-int UartDevice::ReadBytes(std::vector<uint8_t> &buf, size_t len, int timeout_ms)
+int UartDevice::ReadBytes(std::vector<uint8_t>& buf, size_t len, int timeout_ms)
 {
     buf.resize(len);
     int read = uart_read_bytes(port_->GetPort(), buf.data(), len, pdMS_TO_TICKS(timeout_ms));
@@ -165,7 +165,7 @@ int UartDevice::ReadBytes(std::vector<uint8_t> &buf, size_t len, int timeout_ms)
     return read;
 }
 
-int UartDevice::ReadAvailable(std::vector<uint8_t> &buf, int timeout_ms)
+int UartDevice::ReadAvailable(std::vector<uint8_t>& buf, int timeout_ms)
 {
     uart_port_t p = port_->GetPort();
     size_t available = 0;
@@ -205,7 +205,7 @@ int UartDevice::ReadAvailable(std::vector<uint8_t> &buf, int timeout_ms)
     return n;
 }
 
-bool UartDevice::ReadLine(std::string &line, char delimiter, int timeout_ms)
+bool UartDevice::ReadLine(std::string& line, char delimiter, int timeout_ms)
 {
     line.clear();
     uint8_t ch;
@@ -225,7 +225,7 @@ bool UartDevice::ReadLine(std::string &line, char delimiter, int timeout_ms)
     }
 }
 
-int UartDevice::WriteLine(const std::string &line, char delimiter)
+int UartDevice::WriteLine(const std::string& line, char delimiter)
 {
     uart_port_t p = port_->GetPort();
     int written = uart_write_bytes(p, line.c_str(), line.size());
@@ -288,9 +288,9 @@ int UartDevice::GetBufferedDataLen()
 
 // --- AtDevice ---
 
-AtDevice::AtDevice(Logger &logger) : UartDevice(logger) {}
+AtDevice::AtDevice(Logger& logger) : UartDevice(logger) {}
 
-int AtDevice::WriteAtCmd(const char *cmd)
+int AtDevice::WriteAtCmd(const char* cmd)
 {
     uart_port_t p = port_->GetPort();
     int written = uart_write_bytes(p, cmd, strlen(cmd));
@@ -308,9 +308,9 @@ int AtDevice::WriteAtCmd(const char *cmd)
     return written + d;
 }
 
-int AtDevice::WriteAtCmd(const std::string &cmd) { return WriteAtCmd(cmd.c_str()); }
+int AtDevice::WriteAtCmd(const std::string& cmd) { return WriteAtCmd(cmd.c_str()); }
 
-bool AtDevice::SendAtCmd(const char *cmd, std::string &response, int timeout_ms)
+bool AtDevice::SendAtCmd(const char* cmd, std::string& response, int timeout_ms)
 {
     FlushInput();
 
@@ -323,12 +323,12 @@ bool AtDevice::SendAtCmd(const char *cmd, std::string &response, int timeout_ms)
     return WaitForKeyword("", response, timeout_ms);
 }
 
-bool AtDevice::SendAtCmd(const std::string &cmd, std::string &response, int timeout_ms)
+bool AtDevice::SendAtCmd(const std::string& cmd, std::string& response, int timeout_ms)
 {
     return SendAtCmd(cmd.c_str(), response, timeout_ms);
 }
 
-bool AtDevice::WaitForKeyword(const std::string &keyword, std::string &response, int timeout_ms)
+bool AtDevice::WaitForKeyword(const std::string& keyword, std::string& response, int timeout_ms)
 {
     response.clear();
     std::string line;

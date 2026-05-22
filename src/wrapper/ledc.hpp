@@ -39,19 +39,19 @@ struct LedcChannelConfig : public ledc_channel_config_t
 class LedcTimer
 {
    private:
-    Logger &logger_;
+    Logger& logger_;
     ledc_mode_t speed_mode_;
     ledc_timer_t timer_num_;
     bool initialized_;
 
    public:
-    LedcTimer(Logger &logger);
+    LedcTimer(Logger& logger);
     ~LedcTimer();
     ledc_mode_t GetSpeedMode() const { return speed_mode_; }
     ledc_timer_t GetTimerNum() const { return timer_num_; }
     bool IsInitialized() const { return initialized_; }
     // operations
-    bool Init(const LedcTimerConfig &config);
+    bool Init(const LedcTimerConfig& config);
     bool Deinit();
     bool Pause();
     bool Resume();
@@ -61,19 +61,19 @@ class LedcTimer
 class LedcChannel
 {
    private:
-    Logger &logger_;
+    Logger& logger_;
     ledc_mode_t speed_mode_;
     ledc_channel_t channel_;
     bool initialized_;
 
    public:
-    LedcChannel(Logger &logger);
+    LedcChannel(Logger& logger);
     ~LedcChannel();
     ledc_mode_t GetSpeedMode() const { return speed_mode_; }
     ledc_channel_t GetChannel() const { return channel_; }
     bool IsInitialized() const { return initialized_; }
     // operations
-    bool Init(const LedcChannelConfig &config);
+    bool Init(const LedcChannelConfig& config);
     bool Deinit();
     bool SetDuty(uint32_t duty);
     bool SetDutyAndUpdate(uint32_t duty);
