@@ -1,18 +1,28 @@
 #pragma once
 #include "esp_err.h"
+#include "esp_idf_version.h"
 #include "driver/i2s_std.h"
 #include "driver/i2s_tdm.h"
 #include "driver/i2s_pdm.h"
 #include "wrapper/logger.hpp"
 #include <vector>
 
+#if ESP_IDF_VERSION_MAJOR >= 6
+typedef int i2s_port_t;
+#endif
+
 namespace wrapper
 {
 
 struct I2sBusConfig : public i2s_chan_config_t
 {
-    I2sBusConfig(i2s_port_t id, i2s_role_t role, uint32_t dma_desc_num, uint32_t dma_frame_num,
-                 bool auto_clear_after_cb, bool auto_clear_before_cb, int intr_priority)
+    I2sBusConfig(i2s_port_t id,
+                 i2s_role_t role,
+                 uint32_t dma_desc_num,
+                 uint32_t dma_frame_num,
+                 bool auto_clear_after_cb,
+                 bool auto_clear_before_cb,
+                 int intr_priority)
         : i2s_chan_config_t{}  // Zero-initialize base struct using aggregate initialization
     {
         // Set the actual values
@@ -30,14 +40,30 @@ struct I2sChanStdConfig : public i2s_std_config_t
 {
     I2sChanStdConfig(
         // i2s_std_clk_config_t
-        uint32_t sample_rate_hz, i2s_clock_src_t clk_src, uint32_t ext_clk_freq_hz,
-        i2s_mclk_multiple_t mclk_multiple, uint32_t bclk_div,
+        uint32_t sample_rate_hz,
+        i2s_clock_src_t clk_src,
+        uint32_t ext_clk_freq_hz,
+        i2s_mclk_multiple_t mclk_multiple,
+        uint32_t bclk_div,
         // i2s_std_slot_config_t
-        i2s_data_bit_width_t data_bit_width, i2s_slot_bit_width_t slot_bit_width,
-        i2s_slot_mode_t slot_mode, i2s_std_slot_mask_t slot_mask, uint32_t ws_width, bool ws_pol,
-        bool bit_shift, bool left_align, bool big_endian, bool bit_order_lsb, gpio_num_t mclk,
-        gpio_num_t bclk, gpio_num_t ws, gpio_num_t dout, gpio_num_t din, bool mclk_inv = false,
-        bool bclk_inv = false, bool ws_inv = false)
+        i2s_data_bit_width_t data_bit_width,
+        i2s_slot_bit_width_t slot_bit_width,
+        i2s_slot_mode_t slot_mode,
+        i2s_std_slot_mask_t slot_mask,
+        uint32_t ws_width,
+        bool ws_pol,
+        bool bit_shift,
+        bool left_align,
+        bool big_endian,
+        bool bit_order_lsb,
+        gpio_num_t mclk,
+        gpio_num_t bclk,
+        gpio_num_t ws,
+        gpio_num_t dout,
+        gpio_num_t din,
+        bool mclk_inv = false,
+        bool bclk_inv = false,
+        bool ws_inv = false)
         : i2s_std_config_t{}  // Zero-initialize base struct using aggregate initialization
     {
         clk_cfg.sample_rate_hz = sample_rate_hz;
@@ -70,14 +96,31 @@ struct I2sChanStdConfig : public i2s_std_config_t
 
 struct I2SChanTdmConfig : public i2s_tdm_config_t
 {
-    I2SChanTdmConfig(uint32_t sample_rate_hz, i2s_clock_src_t clk_src, uint32_t ext_clk_freq_hz,
-                     i2s_mclk_multiple_t mclk_multiple, uint32_t bclk_div,
-                     i2s_data_bit_width_t data_bit_width, i2s_slot_bit_width_t slot_bit_width,
-                     i2s_slot_mode_t slot_mode, i2s_tdm_slot_mask_t slot_mask, uint32_t ws_width,
-                     bool ws_pol, bool bit_shift, bool left_align, bool big_endian,
-                     bool bit_order_lsb, bool skip_mask, uint32_t total_slot, gpio_num_t mclk,
-                     gpio_num_t bclk, gpio_num_t ws, gpio_num_t dout, gpio_num_t din,
-                     bool mclk_inv = false, bool bclk_inv = false, bool ws_inv = false)
+    I2SChanTdmConfig(uint32_t sample_rate_hz,
+                     i2s_clock_src_t clk_src,
+                     uint32_t ext_clk_freq_hz,
+                     i2s_mclk_multiple_t mclk_multiple,
+                     uint32_t bclk_div,
+                     i2s_data_bit_width_t data_bit_width,
+                     i2s_slot_bit_width_t slot_bit_width,
+                     i2s_slot_mode_t slot_mode,
+                     i2s_tdm_slot_mask_t slot_mask,
+                     uint32_t ws_width,
+                     bool ws_pol,
+                     bool bit_shift,
+                     bool left_align,
+                     bool big_endian,
+                     bool bit_order_lsb,
+                     bool skip_mask,
+                     uint32_t total_slot,
+                     gpio_num_t mclk,
+                     gpio_num_t bclk,
+                     gpio_num_t ws,
+                     gpio_num_t dout,
+                     gpio_num_t din,
+                     bool mclk_inv = false,
+                     bool bclk_inv = false,
+                     bool ws_inv = false)
         : i2s_tdm_config_t{}  // Zero-initialize base struct using aggregate initialization
     {
         clk_cfg.sample_rate_hz = sample_rate_hz;
@@ -112,11 +155,17 @@ struct I2SChanTdmConfig : public i2s_tdm_config_t
 
 struct I2sChanPdmRxConfig : public i2s_pdm_rx_config_t
 {
-    I2sChanPdmRxConfig(uint32_t sample_rate_hz, i2s_clock_src_t clk_src,
-                       i2s_mclk_multiple_t mclk_multiple, i2s_pdm_dsr_t dn_sample_mode,
-                       uint32_t bclk_div, i2s_data_bit_width_t data_bit_width,
-                       i2s_slot_bit_width_t slot_bit_width, i2s_slot_mode_t slot_mode,
-                       i2s_pdm_slot_mask_t slot_mask, gpio_num_t clk, gpio_num_t din,
+    I2sChanPdmRxConfig(uint32_t sample_rate_hz,
+                       i2s_clock_src_t clk_src,
+                       i2s_mclk_multiple_t mclk_multiple,
+                       i2s_pdm_dsr_t dn_sample_mode,
+                       uint32_t bclk_div,
+                       i2s_data_bit_width_t data_bit_width,
+                       i2s_slot_bit_width_t slot_bit_width,
+                       i2s_slot_mode_t slot_mode,
+                       i2s_pdm_slot_mask_t slot_mask,
+                       gpio_num_t clk,
+                       gpio_num_t din,
                        bool clk_inv = false)
         : i2s_pdm_rx_config_t{}
     {
@@ -139,13 +188,18 @@ struct I2sChanPdmRxConfig : public i2s_pdm_rx_config_t
 
 struct I2sChanPdmTxConfig : public i2s_pdm_tx_config_t
 {
-    I2sChanPdmTxConfig(uint32_t sample_rate_hz, i2s_clock_src_t clk_src,
+    I2sChanPdmTxConfig(uint32_t sample_rate_hz,
+                       i2s_clock_src_t clk_src,
                        i2s_mclk_multiple_t mclk_multiple,
                        uint32_t up_sample_fp,  // Changed from i2s_pdm_usr_t up_sample_mode
-                       uint32_t bclk_div, i2s_data_bit_width_t data_bit_width,
-                       i2s_slot_bit_width_t slot_bit_width, i2s_slot_mode_t slot_mode,
+                       uint32_t bclk_div,
+                       i2s_data_bit_width_t data_bit_width,
+                       i2s_slot_bit_width_t slot_bit_width,
+                       i2s_slot_mode_t slot_mode,
                        // i2s_pdm_slot_mask_t slot_mask, // Removed slot_mask
-                       gpio_num_t clk, gpio_num_t dout, bool clk_inv = false)
+                       gpio_num_t clk,
+                       gpio_num_t dout,
+                       bool clk_inv = false)
         : i2s_pdm_tx_config_t{}
     {
         clk_cfg.sample_rate_hz = sample_rate_hz;

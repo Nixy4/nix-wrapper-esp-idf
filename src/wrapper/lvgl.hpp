@@ -10,7 +10,11 @@ namespace wrapper
 
 struct LvglPortConfig : public lvgl_port_cfg_t
 {
-    LvglPortConfig(int task_prio, int stack_sz, int affinity, int max_sleep_ms, uint32_t stack_caps,
+    LvglPortConfig(int task_prio,
+                   int stack_sz,
+                   int affinity,
+                   int max_sleep_ms,
+                   uint32_t stack_caps,
                    uint32_t timer_ms)
         : lvgl_port_cfg_t{}
     {
@@ -29,9 +33,21 @@ struct LvglDisplayConfig : public lvgl_port_display_cfg_t
         // esp_lcd_panel_io_handle_t io_handle,
         // esp_lcd_panel_handle_t panel_handle,
         // esp_lcd_panel_handle_t control_handle,
-        uint32_t buf_sz, bool double_buf, uint32_t trans_sz, uint32_t hor_res, uint32_t ver_res,
-        bool mono, bool swap_xy, bool mirror_x, bool mirror_y, lv_color_format_t format,
-        bool buff_dma, bool buff_spiram, bool sw_rotate, bool swap_bytes, bool full_refresh,
+        uint32_t buf_sz,
+        bool double_buf,
+        uint32_t trans_sz,
+        uint32_t hor_res,
+        uint32_t ver_res,
+        bool mono,
+        bool swap_xy,
+        bool mirror_x,
+        bool mirror_y,
+        lv_color_format_t format,
+        bool buff_dma,
+        bool buff_spiram,
+        bool sw_rotate,
+        bool swap_bytes,
+        bool full_refresh,
         bool direct_mode)
         : lvgl_port_display_cfg_t{}
     {
@@ -98,7 +114,8 @@ class LvglPort
     bool Init(const LvglPortConfig& config);
     bool Deinit();
     bool AddDisplay(const DisplayBase& display, LvglDisplayConfig& config);
-    bool AddDisplayDsi(const DisplayBase& display, LvglDisplayConfig& config,
+    bool AddDisplayDsi(const DisplayBase& display,
+                       LvglDisplayConfig& config,
                        const LvglDisplayDsiConfig& dsi_config);
     bool AddTouch(const I2cTouch& touch, LvglTouchConfig& config);
     bool Lock(uint32_t timeout_ms);

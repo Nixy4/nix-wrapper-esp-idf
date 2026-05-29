@@ -54,18 +54,28 @@ class EventLoop
     bool RunLoop(TickType_t ticks_to_run);
 
     // Handler Management
-    bool Register(esp_event_base_t event_base, int32_t event_id, esp_event_handler_t event_handler,
-                  void* event_handler_arg, esp_event_handler_instance_t* instance);
-    bool Unregister(esp_event_base_t event_base, int32_t event_id,
+    bool Register(esp_event_base_t event_base,
+                  int32_t event_id,
+                  esp_event_handler_t event_handler,
+                  void* event_handler_arg,
+                  esp_event_handler_instance_t* instance);
+    bool Unregister(esp_event_base_t event_base,
+                    int32_t event_id,
                     esp_event_handler_instance_t instance);
 
     // Post Events
-    bool Post(esp_event_base_t event_base, int32_t event_id, const void* event_data,
-              size_t event_data_size, TickType_t ticks_to_wait);
+    bool Post(esp_event_base_t event_base,
+              int32_t event_id,
+              const void* event_data,
+              size_t event_data_size,
+              TickType_t ticks_to_wait);
 
     // ISR Post
-    bool PostFromIsr(esp_event_base_t event_base, int32_t event_id, const void* event_data,
-                     size_t event_data_size, BaseType_t* task_unblocked);
+    bool PostFromIsr(esp_event_base_t event_base,
+                     int32_t event_id,
+                     const void* event_data,
+                     size_t event_data_size,
+                     BaseType_t* task_unblocked);
 
     // Diagnostics
     bool Dump(FILE* file);

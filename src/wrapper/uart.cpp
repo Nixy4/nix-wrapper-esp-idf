@@ -19,8 +19,15 @@ QueueHandle_t UartPort::GetEventQueue() const { return event_queue_; }
 
 bool UartPort::IsInstalled() const { return installed_; }
 
-bool UartPort::Init(uart_port_t port, const UartConfig& config, int tx_pin, int rx_pin, int rts_pin,
-                    int cts_pin, int rx_buffer_size, int tx_buffer_size, int event_queue_size)
+bool UartPort::Init(uart_port_t port,
+                    const UartConfig& config,
+                    int tx_pin,
+                    int rx_pin,
+                    int rts_pin,
+                    int cts_pin,
+                    int rx_buffer_size,
+                    int tx_buffer_size,
+                    int event_queue_size)
 {
     if (installed_)
     {

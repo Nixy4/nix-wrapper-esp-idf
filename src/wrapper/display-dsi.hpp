@@ -11,7 +11,9 @@ namespace wrapper
 // MIPI DSI Bus Configuration
 struct DsiBusConfig : public esp_lcd_dsi_bus_config_t
 {
-    DsiBusConfig(int bus_id, uint8_t num_data_lanes, mipi_dsi_phy_clock_source_t phy_clk_src,
+    DsiBusConfig(int bus_id,
+                 uint8_t num_data_lanes,
+                 mipi_dsi_phy_clock_source_t phy_clk_src,
                  uint32_t lane_bit_rate_mbps)
         : esp_lcd_dsi_bus_config_t{}
     {
@@ -31,20 +33,35 @@ struct DsiDisplayConfig
 
     DsiDisplayConfig(
         // DBI IO config parameters
-        uint8_t dbi_virtual_channel, int lcd_cmd_bits, int lcd_param_bits,
+        uint8_t dbi_virtual_channel,
+        int lcd_cmd_bits,
+        int lcd_param_bits,
         // DPI Panel config parameters
-        uint8_t dpi_virtual_channel, mipi_dsi_dpi_clock_source_t dpi_clk_src,
-        uint32_t dpi_clock_freq_mhz, lcd_color_rgb_pixel_format_t pixel_format,
-        lcd_color_format_t in_color_format, lcd_color_format_t out_color_format, uint8_t num_fbs,
+        uint8_t dpi_virtual_channel,
+        mipi_dsi_dpi_clock_source_t dpi_clk_src,
+        uint32_t dpi_clock_freq_mhz,
+        lcd_color_rgb_pixel_format_t pixel_format,
+        lcd_color_format_t in_color_format,
+        lcd_color_format_t out_color_format,
+        uint8_t num_fbs,
         // video_timing nested struct members
-        uint32_t h_size, uint32_t v_size, uint32_t hsync_pulse_width, uint32_t hsync_back_porch,
-        uint32_t hsync_front_porch, uint32_t vsync_pulse_width, uint32_t vsync_back_porch,
+        uint32_t h_size,
+        uint32_t v_size,
+        uint32_t hsync_pulse_width,
+        uint32_t hsync_back_porch,
+        uint32_t hsync_front_porch,
+        uint32_t vsync_pulse_width,
+        uint32_t vsync_back_porch,
         uint32_t vsync_front_porch,
         // flags nested struct members
-        bool use_dma2d, bool disable_lp,
+        bool use_dma2d,
+        bool disable_lp,
         // Panel Device config parameters
-        int reset_gpio_num, lcd_rgb_element_order_t rgb_ele_order,
-        lcd_rgb_data_endian_t data_endian, uint32_t bits_per_pixel, bool reset_active_high = false)
+        int reset_gpio_num,
+        lcd_rgb_element_order_t rgb_ele_order,
+        lcd_rgb_data_endian_t data_endian,
+        uint32_t bits_per_pixel,
+        bool reset_active_high = false)
         : dbi_config{}, dpi_config{}, panel_config{}
     {
         // DBI IO config
@@ -117,19 +134,22 @@ class DsiDisplay : public DisplayBase
     bool InitPanel(
         const esp_lcd_panel_dev_config_t& panel_config,
         std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func = nullptr,
-        void* vendor_config = nullptr, std::function<void(void)> vendor_config_init_func = nullptr);
+        void* vendor_config = nullptr,
+        std::function<void(void)> vendor_config_init_func = nullptr);
 
    public:
     DsiDisplay(Logger& logger);
     ~DsiDisplay();
     // Operations
     bool Init(
-        const DsiBus& bus, const DsiDisplayConfig& config,
-        std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t*,
-                                esp_lcd_panel_handle_t*)>
-            new_panel_func,
+        const DsiBus& bus,
+        const DsiDisplayConfig& config,
+        std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
+                                const esp_lcd_panel_dev_config_t*,
+                                esp_lcd_panel_handle_t*)> new_panel_func,
         std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func = nullptr,
-        void* vendor_config = nullptr, std::function<void(void)> vendor_config_init_func = nullptr);
+        void* vendor_config = nullptr,
+        std::function<void(void)> vendor_config_init_func = nullptr);
 
     bool Deinit();
 };

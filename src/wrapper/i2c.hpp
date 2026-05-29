@@ -9,8 +9,14 @@ namespace wrapper
 struct I2cBusConfig : public i2c_master_bus_config_t
 {
    public:
-    I2cBusConfig(i2c_port_t port, gpio_num_t sda, gpio_num_t scl, i2c_clock_source_t clk_src,
-                 uint8_t glitch_ignore, int intr_prio, size_t queue_depth, bool enable_pullup,
+    I2cBusConfig(i2c_port_t port,
+                 gpio_num_t sda,
+                 gpio_num_t scl,
+                 i2c_clock_source_t clk_src,
+                 uint8_t glitch_ignore,
+                 int intr_prio,
+                 size_t queue_depth,
+                 bool enable_pullup,
                  bool enable_pd)
         : i2c_master_bus_config_t{}
     {
@@ -95,8 +101,11 @@ class I2cDevice
         return i2c_master_receive(dev_handle_, data, length, timeout_ms) == ESP_OK;
     }
 
-    inline bool WriteReadBytes(const uint8_t* write_data, size_t write_length, uint8_t* read_data,
-                               size_t read_length, int timeout_ms)
+    inline bool WriteReadBytes(const uint8_t* write_data,
+                               size_t write_length,
+                               uint8_t* read_data,
+                               size_t read_length,
+                               int timeout_ms)
     {
         return i2c_master_transmit_receive(dev_handle_, write_data, write_length, read_data,
                                            read_length, timeout_ms) == ESP_OK;
@@ -107,8 +116,10 @@ class I2cDevice
 
     bool WriteBytes(const std::vector<uint8_t>& data, int timeout_ms);
     bool ReadBytes(std::vector<uint8_t>& data, size_t len, int timeout_ms);
-    bool WriteReadBytes(const std::vector<uint8_t>& write_data, std::vector<uint8_t>& read_data,
-                        size_t read_len, int timeout_ms);
+    bool WriteReadBytes(const std::vector<uint8_t>& write_data,
+                        std::vector<uint8_t>& read_data,
+                        size_t read_len,
+                        int timeout_ms);
 
     bool WriteRegBytes(uint8_t reg_addr, const std::vector<uint8_t>& data, int timeout_ms);
     bool ReadRegBytes(uint8_t reg_addr, std::vector<uint8_t>& data, size_t len, int timeout_ms);

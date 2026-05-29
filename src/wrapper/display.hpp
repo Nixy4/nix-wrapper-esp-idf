@@ -20,15 +20,21 @@ struct I2cDisplayConfig
         // io_config parameters
         uint16_t dev_addr = 0x00,
         esp_lcd_panel_io_color_trans_done_cb_t on_color_trans_done = nullptr,
-        void* user_ctx = nullptr, unsigned int control_phase_bytes = 1,
-        unsigned int dc_bit_offset = 0, unsigned int lcd_cmd_bits = 8,
-        unsigned int lcd_param_bits = 8, bool dc_low_on_data = false,
-        bool disable_control_phase = true, uint32_t scl_speed_hz = 100000,
+        void* user_ctx = nullptr,
+        unsigned int control_phase_bytes = 1,
+        unsigned int dc_bit_offset = 0,
+        unsigned int lcd_cmd_bits = 8,
+        unsigned int lcd_param_bits = 8,
+        bool dc_low_on_data = false,
+        bool disable_control_phase = true,
+        uint32_t scl_speed_hz = 100000,
         // panel_config parameters
         gpio_num_t reset_gpio = GPIO_NUM_NC,
         lcd_rgb_element_order_t rgb_order = LCD_RGB_ELEMENT_ORDER_RGB,
-        lcd_rgb_data_endian_t data_endian = LCD_RGB_DATA_ENDIAN_BIG, uint32_t bits_per_pixel = 1,
-        bool reset_active_high = false, void* vendor_conf = nullptr)
+        lcd_rgb_data_endian_t data_endian = LCD_RGB_DATA_ENDIAN_BIG,
+        uint32_t bits_per_pixel = 1,
+        bool reset_active_high = false,
+        void* vendor_conf = nullptr)
         : io_config{}, panel_config{}
     {
         // Init io_config
@@ -60,24 +66,38 @@ struct SpiDisplayConfig
 
     SpiDisplayConfig(
         // io_config parameters
-        int cs_gpio, int dc_gpio, int spi_mode, int clock_speed_hz, int lcd_cmd_bits,
-        int lcd_param_bits, size_t trans_queue_depth = 10,
+        int cs_gpio,
+        int dc_gpio,
+        int spi_mode,
+        int clock_speed_hz,
+        int lcd_cmd_bits,
+        int lcd_param_bits,
+        size_t trans_queue_depth = 10,
         esp_lcd_panel_io_color_trans_done_cb_t on_color_trans_done = nullptr,
-        void* user_ctx = nullptr, int cs_ena_pretrans = 0, int cs_ena_posttrans = 0,
+        void* user_ctx = nullptr,
+        int cs_ena_pretrans = 0,
+        int cs_ena_posttrans = 0,
         // io_config flags
-        unsigned int dc_high_on_cmd = 0, unsigned int dc_low_on_data = 0,
-        unsigned int dc_low_on_param = 0, unsigned int octal_mode = 0, unsigned int quad_mode = 0,
-        unsigned int sio_mode = 0, unsigned int lsb_first = 0, unsigned int cs_high_active = 0,
+        unsigned int dc_high_on_cmd = 0,
+        unsigned int dc_low_on_data = 0,
+        unsigned int dc_low_on_param = 0,
+        unsigned int octal_mode = 0,
+        unsigned int quad_mode = 0,
+        unsigned int sio_mode = 0,
+        unsigned int lsb_first = 0,
+        unsigned int cs_high_active = 0,
         // panel_config parameters
         gpio_num_t reset_gpio = GPIO_NUM_NC,
         lcd_rgb_element_order_t rgb_order = LCD_RGB_ELEMENT_ORDER_RGB,
-        lcd_rgb_data_endian_t data_endian = LCD_RGB_DATA_ENDIAN_BIG, uint32_t bits_per_pixel = 16,
-        bool reset_active_high = false, void* vendor_conf = nullptr)
+        lcd_rgb_data_endian_t data_endian = LCD_RGB_DATA_ENDIAN_BIG,
+        uint32_t bits_per_pixel = 16,
+        bool reset_active_high = false,
+        void* vendor_conf = nullptr)
         : io_config{}, panel_config{}
     {
         // Init io_config
-        io_config.cs_gpio_num = cs_gpio;
-        io_config.dc_gpio_num = dc_gpio;
+        io_config.cs_gpio_num = static_cast<gpio_num_t>(cs_gpio);
+        io_config.dc_gpio_num = static_cast<gpio_num_t>(dc_gpio);
         io_config.spi_mode = spi_mode;
         io_config.pclk_hz = clock_speed_hz;
         io_config.trans_queue_depth = trans_queue_depth;
@@ -116,7 +136,8 @@ class DisplayBase
     Logger& logger_;
 
    public:
-    DisplayBase(esp_lcd_panel_io_handle_t io_handle, esp_lcd_panel_handle_t panel_handle,
+    DisplayBase(esp_lcd_panel_io_handle_t io_handle,
+                esp_lcd_panel_handle_t panel_handle,
                 Logger& logger)
         : io_handle_(io_handle), panel_handle_(panel_handle), logger_(logger)
     {
@@ -204,10 +225,11 @@ class I2cDisplay : public DisplayBase
     ~I2cDisplay() { Deinit(); }
 
     bool Init(
-        const I2cBus& bus, const I2cDisplayConfig& config,
-        std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t*,
-                                esp_lcd_panel_handle_t*)>
-            new_panel_func,
+        const I2cBus& bus,
+        const I2cDisplayConfig& config,
+        std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
+                                const esp_lcd_panel_dev_config_t*,
+                                esp_lcd_panel_handle_t*)> new_panel_func,
         std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func = nullptr);
     bool Deinit();
 };
@@ -226,10 +248,11 @@ class SpiDisplay : public DisplayBase
     ~SpiDisplay() { Deinit(); }
 
     bool Init(
-        const SpiBus& bus, const SpiDisplayConfig& config,
-        std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t*,
-                                esp_lcd_panel_handle_t*)>
-            new_panel_func,
+        const SpiBus& bus,
+        const SpiDisplayConfig& config,
+        std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
+                                const esp_lcd_panel_dev_config_t*,
+                                esp_lcd_panel_handle_t*)> new_panel_func,
         std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func = nullptr);
     bool Deinit();
 };

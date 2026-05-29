@@ -410,8 +410,10 @@ bool EventLoop::RunLoop(TickType_t ticks_to_run)
     return esp_event_loop_run(loop_handle_, ticks_to_run) == ESP_OK;
 }
 
-bool EventLoop::Register(esp_event_base_t event_base, int32_t event_id,
-                         esp_event_handler_t event_handler, void* event_handler_arg,
+bool EventLoop::Register(esp_event_base_t event_base,
+                         int32_t event_id,
+                         esp_event_handler_t event_handler,
+                         void* event_handler_arg,
                          esp_event_handler_instance_t* instance)
 {
     if (loop_handle_)
@@ -429,7 +431,8 @@ bool EventLoop::Register(esp_event_base_t event_base, int32_t event_id,
     return false;
 }
 
-bool EventLoop::Unregister(esp_event_base_t event_base, int32_t event_id,
+bool EventLoop::Unregister(esp_event_base_t event_base,
+                           int32_t event_id,
                            esp_event_handler_instance_t instance)
 {
     if (loop_handle_)
@@ -445,8 +448,11 @@ bool EventLoop::Unregister(esp_event_base_t event_base, int32_t event_id,
     return false;
 }
 
-bool EventLoop::Post(esp_event_base_t event_base, int32_t event_id, const void* event_data,
-                     size_t event_data_size, TickType_t ticks_to_wait)
+bool EventLoop::Post(esp_event_base_t event_base,
+                     int32_t event_id,
+                     const void* event_data,
+                     size_t event_data_size,
+                     TickType_t ticks_to_wait)
 {
     if (loop_handle_)
     {
@@ -462,8 +468,11 @@ bool EventLoop::Post(esp_event_base_t event_base, int32_t event_id, const void* 
     return false;
 }
 
-bool EventLoop::PostFromIsr(esp_event_base_t event_base, int32_t event_id, const void* event_data,
-                            size_t event_data_size, BaseType_t* task_unblocked)
+bool EventLoop::PostFromIsr(esp_event_base_t event_base,
+                            int32_t event_id,
+                            const void* event_data,
+                            size_t event_data_size,
+                            BaseType_t* task_unblocked)
 {
 #if CONFIG_ESP_EVENT_POST_FROM_ISR
     if (loop_handle_)

@@ -55,10 +55,11 @@ bool I2cDisplay::InitPanel(
 }
 
 bool I2cDisplay::Init(
-    const I2cBus& bus, const I2cDisplayConfig& config,
-    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t*,
-                            esp_lcd_panel_handle_t*)>
-        new_panel_func,
+    const I2cBus& bus,
+    const I2cDisplayConfig& config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
+                            const esp_lcd_panel_dev_config_t*,
+                            esp_lcd_panel_handle_t*)> new_panel_func,
     std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
 {
     if (!InitIo(bus, config))
@@ -148,10 +149,11 @@ bool SpiDisplay::InitPanel(
 }
 
 bool SpiDisplay::Init(
-    const SpiBus& bus, const SpiDisplayConfig& config,
-    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t*,
-                            esp_lcd_panel_handle_t*)>
-        new_panel_func,
+    const SpiBus& bus,
+    const SpiDisplayConfig& config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
+                            const esp_lcd_panel_dev_config_t*,
+                            esp_lcd_panel_handle_t*)> new_panel_func,
     std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func)
 {
     if (!InitIo(bus, config))

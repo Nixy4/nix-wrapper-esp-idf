@@ -11,9 +11,13 @@ namespace wrapper
 struct UartConfig : public uart_config_t
 {
    public:
-    UartConfig(int baud_rate, uart_word_length_t data_bits, uart_parity_t parity,
-               uart_stop_bits_t stop_bits, uart_hw_flowcontrol_t flow_ctrl,
-               uint8_t rx_flow_ctrl_thresh, uart_sclk_t source_clk)
+    UartConfig(int baud_rate,
+               uart_word_length_t data_bits,
+               uart_parity_t parity,
+               uart_stop_bits_t stop_bits,
+               uart_hw_flowcontrol_t flow_ctrl,
+               uint8_t rx_flow_ctrl_thresh,
+               uart_sclk_t source_clk)
         : uart_config_t{}
     {
         this->baud_rate = baud_rate;
@@ -43,9 +47,15 @@ class UartPort
     bool IsInstalled() const;
 
     // operations
-    bool Init(uart_port_t port, const UartConfig& config, int tx_pin, int rx_pin,
-              int rts_pin = UART_PIN_NO_CHANGE, int cts_pin = UART_PIN_NO_CHANGE,
-              int rx_buffer_size = 1024, int tx_buffer_size = 0, int event_queue_size = 0);
+    bool Init(uart_port_t port,
+              const UartConfig& config,
+              int tx_pin,
+              int rx_pin,
+              int rts_pin = UART_PIN_NO_CHANGE,
+              int cts_pin = UART_PIN_NO_CHANGE,
+              int rx_buffer_size = 1024,
+              int tx_buffer_size = 0,
+              int event_queue_size = 0);
     bool Deinit();
 
     // baudrate

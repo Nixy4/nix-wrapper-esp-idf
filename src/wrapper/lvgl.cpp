@@ -92,7 +92,8 @@ bool LvglPort::AddDisplay(const DisplayBase& display, LvglDisplayConfig& config)
     return true;
 }
 
-bool LvglPort::AddDisplayDsi(const DisplayBase& display, LvglDisplayConfig& config,
+bool LvglPort::AddDisplayDsi(const DisplayBase& display,
+                             LvglDisplayConfig& config,
                              const LvglDisplayDsiConfig& dsi_config)
 {
     if (!initialized_)

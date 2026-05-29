@@ -18,10 +18,22 @@ struct SpiBusConfig : public spi_bus_config_t
     spi_host_device_t host_id;
     spi_dma_chan_t dma_chan;
 
-    SpiBusConfig(spi_host_device_t host, int mosi, int miso, int sclk, int quadwp, int quadhd,
-                 int data4, int data5, int data6, int data7, bool data_default_level,
-                 int max_transfer, uint32_t bus_flags, esp_intr_cpu_affinity_t isr_cpu,
-                 int intr_flag, spi_dma_chan_t dma)
+    SpiBusConfig(spi_host_device_t host,
+                 int mosi,
+                 int miso,
+                 int sclk,
+                 int quadwp,
+                 int quadhd,
+                 int data4,
+                 int data5,
+                 int data6,
+                 int data7,
+                 bool data_default_level,
+                 int max_transfer,
+                 uint32_t bus_flags,
+                 esp_intr_cpu_affinity_t isr_cpu,
+                 int intr_flag,
+                 spi_dma_chan_t dma)
         : spi_bus_config_t{}
     {
         mosi_io_num = mosi;

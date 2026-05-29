@@ -223,7 +223,8 @@ bool SpeakerCodec::Init(I2sBus& i2s_bus)
     return true;
 }
 
-bool SpeakerCodec::AddSpeaker(I2cBus& i2c_bus, uint8_t addr,
+bool SpeakerCodec::AddSpeaker(I2cBus& i2c_bus,
+                              uint8_t addr,
                               std::function<esp_err_t()> codec_new_func)
 {
     if (spk_codec_dev_handle_ != nullptr)
@@ -337,7 +338,8 @@ bool MicrophoneCodec::Init(I2sBus& i2s_bus)
     return true;
 }
 
-bool MicrophoneCodec::AddMicrophone(I2cBus& i2c_bus, uint8_t addr,
+bool MicrophoneCodec::AddMicrophone(I2cBus& i2c_bus,
+                                    uint8_t addr,
                                     std::function<esp_err_t()> codec_new_func)
 {
     if (mic_codec_dev_handle_ != nullptr)
@@ -452,7 +454,8 @@ bool AudioCodec::Init(I2sBus& i2s_bus)
     return true;
 }
 
-bool AudioCodec::AddSpeaker(I2cBus& i2c_bus, uint8_t addr,
+bool AudioCodec::AddSpeaker(I2cBus& i2c_bus,
+                            uint8_t addr,
                             std::function<esp_err_t()> codec_new_func)
 {
     if (spk_codec_dev_handle_ != nullptr)
@@ -478,7 +481,8 @@ bool AudioCodec::AddSpeaker(I2cBus& i2c_bus, uint8_t addr,
     return true;
 }
 
-bool AudioCodec::AddMicrophone(I2cBus& i2c_bus, uint8_t addr,
+bool AudioCodec::AddMicrophone(I2cBus& i2c_bus,
+                               uint8_t addr,
                                std::function<esp_err_t()> codec_new_func)
 {
     esp_err_t err;

@@ -18,28 +18,43 @@ namespace wrapper
 
 // SPI Bus Config
 SpiBusConfig spi_bus_config(SPI2_HOST,
-                            GPIO_NUM_35,             // mosi
-                            GPIO_NUM_NC,             // miso
-                            GPIO_NUM_36,             // sclk
-                            -1, -1, -1, -1, -1, -1,  // quad/data pins
-                            true,                    // data_default_level
-                            4096,                    // max_transfer_sz
-                            SPICOMMON_BUSFLAG_MASTER, ESP_INTR_CPU_AFFINITY_AUTO, 0,
+                            GPIO_NUM_35,  // mosi
+                            GPIO_NUM_NC,  // miso
+                            GPIO_NUM_36,  // sclk
+                            -1,
+                            -1,
+                            -1,
+                            -1,
+                            -1,
+                            -1,    // quad/data pins
+                            true,  // data_default_level
+                            4096,  // max_transfer_sz
+                            SPICOMMON_BUSFLAG_MASTER,
+                            ESP_INTR_CPU_AFFINITY_AUTO,
+                            0,
                             SPI_DMA_CH_AUTO);
 
 // SPI Display Config
-SpiDisplayConfig spi_display_config(GPIO_NUM_37,             // cs
-                                    GPIO_NUM_34,             // dc
-                                    0,                       // spi_mode
-                                    40000000,                // clock_speed_hz
-                                    8,                       // cmd_bits
-                                    8,                       // param_bits
-                                    10,                      // queue_depth
-                                    nullptr,                 // on_color_trans_done
-                                    nullptr,                 // user_ctx
-                                    0, 0,                    // cs_ena pre/post
-                                    0, 0, 0, 0, 0, 0, 0, 0,  // flags
-                                    GPIO_NUM_33              // reset_gpio
+SpiDisplayConfig spi_display_config(GPIO_NUM_37,  // cs
+                                    GPIO_NUM_34,  // dc
+                                    0,            // spi_mode
+                                    40000000,     // clock_speed_hz
+                                    8,            // cmd_bits
+                                    8,            // param_bits
+                                    10,           // queue_depth
+                                    nullptr,      // on_color_trans_done
+                                    nullptr,      // user_ctx
+                                    0,
+                                    0,  // cs_ena pre/post
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,           // flags
+                                    GPIO_NUM_33  // reset_gpio
 );
 
 // I2C Config (Grove)
@@ -56,7 +71,8 @@ I2cBusConfig i2c_bus_config(I2C_NUM_1,
 
 // I2S Config (Speaker - NS4168)
 // Note: Speaker uses BCLK=41, SDATA=42, LRCLK=43
-I2sBusConfig i2s_bus_cfg(I2S_NUM_0, I2S_ROLE_MASTER,
+I2sBusConfig i2s_bus_cfg(I2S_NUM_0,
+                         I2S_ROLE_MASTER,
                          6,      // dma_desc_num
                          1024,   // dma_frame_num
                          true,   // auto_clear_after_cb

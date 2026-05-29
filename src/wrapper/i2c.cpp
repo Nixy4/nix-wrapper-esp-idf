@@ -250,7 +250,9 @@ bool I2cDevice::ReadBytes(std::vector<uint8_t>& data, size_t len, int timeout_ms
 }
 
 bool I2cDevice::WriteReadBytes(const std::vector<uint8_t>& write_data,
-                               std::vector<uint8_t>& read_data, size_t read_len, int timeout_ms)
+                               std::vector<uint8_t>& read_data,
+                               size_t read_len,
+                               int timeout_ms)
 {
     if (dev_handle_ == nullptr)
         return false;
@@ -300,7 +302,9 @@ bool I2cDevice::WriteRegBytes(uint8_t reg_addr, const std::vector<uint8_t>& data
     }
 }
 
-bool I2cDevice::ReadRegBytes(uint8_t reg_addr, std::vector<uint8_t>& data, size_t len,
+bool I2cDevice::ReadRegBytes(uint8_t reg_addr,
+                             std::vector<uint8_t>& data,
+                             size_t len,
                              int timeout_ms)
 {
     if (dev_handle_ == nullptr)

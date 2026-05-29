@@ -52,16 +52,35 @@ I2sChanStdConfig tx_config(
     false,        // bclk_inv
     false);       // ws_inv
 
-I2SChanTdmConfig rx_config(16000, I2S_CLK_SRC_DEFAULT, 0, I2S_MCLK_MULTIPLE_256, 8,
-                           I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_BIT_WIDTH_AUTO, I2S_SLOT_MODE_STEREO,
+I2SChanTdmConfig rx_config(16000,
+                           I2S_CLK_SRC_DEFAULT,
+                           0,
+                           I2S_MCLK_MULTIPLE_256,
+                           8,
+                           I2S_DATA_BIT_WIDTH_16BIT,
+                           I2S_SLOT_BIT_WIDTH_AUTO,
+                           I2S_SLOT_MODE_STEREO,
                            (i2s_tdm_slot_mask_t)(I2S_TDM_SLOT0 | I2S_TDM_SLOT1 | I2S_TDM_SLOT2 |
                                                  I2S_TDM_SLOT3),
-                           I2S_TDM_AUTO_WS_WIDTH, false, true, false, false, false, false,
-                           I2S_TDM_AUTO_SLOT_NUM, GPIO_NUM_0, GPIO_NUM_34, GPIO_NUM_33, GPIO_NUM_NC,
-                           GPIO_NUM_NC, false, false, false);
+                           I2S_TDM_AUTO_WS_WIDTH,
+                           false,
+                           true,
+                           false,
+                           false,
+                           false,
+                           false,
+                           I2S_TDM_AUTO_SLOT_NUM,
+                           GPIO_NUM_0,
+                           GPIO_NUM_34,
+                           GPIO_NUM_33,
+                           GPIO_NUM_NC,
+                           GPIO_NUM_NC,
+                           false,
+                           false,
+                           false);
 
-I2cBusConfig i2c_bus1_config(I2C_NUM_1, GPIO_NUM_12, GPIO_NUM_11, I2C_CLK_SRC_DEFAULT, 7, 0, 0,
-                             true, false);
+I2cBusConfig i2c_bus1_config(
+    I2C_NUM_1, GPIO_NUM_12, GPIO_NUM_11, I2C_CLK_SRC_DEFAULT, 7, 0, 0, true, false);
 
 SpiBusConfig spi_bus_config(SPI3_HOST,                     // host
                             GPIO_NUM_37,                   // mosi

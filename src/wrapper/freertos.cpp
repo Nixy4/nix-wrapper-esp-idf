@@ -20,8 +20,11 @@ void DelayUntilTicks(uint32_t* previous_wake_time, uint32_t time_increment_ticks
 }
 
 // Task Implementation
-Task::Task(const std::string& name, std::function<void(void*)> function, void* arg,
-           uint32_t stack_depth, UBaseType_t priority)
+Task::Task(const std::string& name,
+           std::function<void(void*)> function,
+           void* arg,
+           uint32_t stack_depth,
+           UBaseType_t priority)
     : name_(name),
       function_(function),
       arg_(arg),
@@ -169,8 +172,10 @@ EventGroup::~EventGroup()
     }
 }
 
-EventBits_t EventGroup::WaitBits(const EventBits_t bits_to_wait_for, const bool clear_on_exit,
-                                 const bool wait_for_all_bits, TickType_t wait_ticks)
+EventBits_t EventGroup::WaitBits(const EventBits_t bits_to_wait_for,
+                                 const bool clear_on_exit,
+                                 const bool wait_for_all_bits,
+                                 TickType_t wait_ticks)
 {
     if (handle_ == nullptr)
         return 0;
@@ -221,7 +226,8 @@ EventBits_t EventGroup::GetBitsFromISR() const
     return xEventGroupGetBitsFromISR(handle_);
 }
 
-EventBits_t EventGroup::Sync(const EventBits_t bits_to_set, const EventBits_t bits_to_wait_for,
+EventBits_t EventGroup::Sync(const EventBits_t bits_to_set,
+                             const EventBits_t bits_to_wait_for,
                              TickType_t wait_ticks)
 {
     if (handle_ == nullptr)

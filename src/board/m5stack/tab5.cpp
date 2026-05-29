@@ -79,9 +79,27 @@ DsiDisplayConfig dsi_display_cfg(
     false                       // reset_active_high
 );
 
-I2cTouchConfig gt911_touch_cfg(ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS_BACKUP, nullptr, nullptr, 1, 0,
-                               16, 0, 0, 0, 400000, 1280, 800, GPIO_NUM_NC, GPIO_NUM_NC, 0, 0, 0, 0,
-                               0, nullptr, nullptr);
+I2cTouchConfig gt911_touch_cfg(ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS_BACKUP,
+                               nullptr,
+                               nullptr,
+                               1,
+                               0,
+                               16,
+                               0,
+                               0,
+                               0,
+                               400000,
+                               1280,
+                               800,
+                               GPIO_NUM_NC,
+                               GPIO_NUM_NC,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               nullptr,
+                               nullptr);
 
 I2sBusConfig i2s_bus_cfg(I2S_NUM_0, I2S_ROLE_MASTER, 6, 256, true, false, 0);
 

@@ -6,10 +6,11 @@ I2cTouch::I2cTouch(Logger& logger) : logger_(logger), io_handle_(NULL), touch_ha
 
 I2cTouch::~I2cTouch() { Deinit(); }
 
-bool I2cTouch::Init(const I2cBus& bus, const I2cTouchConfig& config,
+bool I2cTouch::Init(const I2cBus& bus,
+                    const I2cTouchConfig& config,
                     std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
-                                            const esp_lcd_touch_config_t*, esp_lcd_touch_handle_t*)>
-                        new_touch_func)
+                                            const esp_lcd_touch_config_t*,
+                                            esp_lcd_touch_handle_t*)> new_touch_func)
 {
     if (io_handle_ != NULL || touch_handle_ != NULL)
     {
@@ -98,8 +99,8 @@ bool I2cTouch::GetData(esp_lcd_touch_point_data_t* data, uint8_t* point_cnt, uin
     return esp_lcd_touch_get_data(touch_handle_, data, point_cnt, max_point_cnt) == ESP_OK;
 }
 
-bool I2cTouch::GetCoordinates(uint16_t* x, uint16_t* y, uint16_t* strength, uint8_t* point_num,
-                              uint8_t max_point_num)
+bool I2cTouch::GetCoordinates(
+    uint16_t* x, uint16_t* y, uint16_t* strength, uint8_t* point_num, uint8_t max_point_num)
 {
     if (touch_handle_ == NULL)
     {

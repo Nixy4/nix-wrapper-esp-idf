@@ -1,13 +1,17 @@
 #pragma once
 #include "driver/ledc.h"
+#include "driver/gpio.h"
 #include "wrapper/logger.hpp"
 
 namespace wrapper
 {
 struct LedcTimerConfig : public ledc_timer_config_t
 {
-    LedcTimerConfig(ledc_mode_t speed_mode, ledc_timer_bit_t duty_resolution,
-                    ledc_timer_t timer_num, uint32_t freq_hz, ledc_clk_cfg_t clk_cfg,
+    LedcTimerConfig(ledc_mode_t speed_mode,
+                    ledc_timer_bit_t duty_resolution,
+                    ledc_timer_t timer_num,
+                    uint32_t freq_hz,
+                    ledc_clk_cfg_t clk_cfg,
                     bool deconfigure = false)
         : ledc_timer_config_t{}
     {
@@ -22,8 +26,13 @@ struct LedcTimerConfig : public ledc_timer_config_t
 
 struct LedcChannelConfig : public ledc_channel_config_t
 {
-    LedcChannelConfig(gpio_num_t gpio_num, ledc_mode_t speed_mode, ledc_channel_t channel,
-                      ledc_intr_type_t intr_type, ledc_timer_t timer_sel, uint32_t duty, int hpoint)
+    LedcChannelConfig(gpio_num_t gpio_num,
+                      ledc_mode_t speed_mode,
+                      ledc_channel_t channel,
+                      ledc_intr_type_t intr_type,
+                      ledc_timer_t timer_sel,
+                      uint32_t duty,
+                      int hpoint)
         : ledc_channel_config_t{}
     {
         this->gpio_num = gpio_num;

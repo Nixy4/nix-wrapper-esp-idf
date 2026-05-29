@@ -1,6 +1,20 @@
 set(INCLUDE_DIRS "src")
 
-set(REQUIRES_ESP_IDF "log" "efuse" "nvs_flash" "driver" "esp_lcd" "esp_wifi" "esp_event" "wifi_provisioning")
+set(REQUIRES_ESP_IDF
+  "log"
+  "efuse"
+  "nvs_flash"
+  "esp_event"
+  "esp_wifi"
+  "esp_timer"
+  "esp_lcd"
+  "esp_driver_gpio"
+  "esp_driver_i2c"
+  "esp_driver_i2s"
+  "esp_driver_spi"
+  "esp_driver_uart"
+  "esp_driver_ledc"
+)
 set(REQUIRES_ESP_REGISTRY "")
 set(REQUIRES_PROJECT "")
 

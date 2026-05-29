@@ -62,12 +62,14 @@ DsiDisplay::DsiDisplay(Logger& logger) : DsiDisplay::DisplayBase(logger) {}
 DsiDisplay::~DsiDisplay() { Deinit(); }
 
 bool DsiDisplay::Init(
-    const DsiBus& bus, const DsiDisplayConfig& config,
-    std::function<esp_err_t(const esp_lcd_panel_io_handle_t, const esp_lcd_panel_dev_config_t*,
-                            esp_lcd_panel_handle_t*)>
-        new_panel_func,
+    const DsiBus& bus,
+    const DsiDisplayConfig& config,
+    std::function<esp_err_t(const esp_lcd_panel_io_handle_t,
+                            const esp_lcd_panel_dev_config_t*,
+                            esp_lcd_panel_handle_t*)> new_panel_func,
     std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func,
-    void* vendor_config, std::function<void(void)> vendor_config_init_func)
+    void* vendor_config,
+    std::function<void(void)> vendor_config_init_func)
 {
     // 1. Initialize Panel IO (DBI)
     if (!InitIo(bus, config.dbi_config))
@@ -123,7 +125,8 @@ bool DsiDisplay::InitIo(const DsiBus& bus, const esp_lcd_dbi_io_config_t& config
 bool DsiDisplay::InitPanel(
     const esp_lcd_panel_dev_config_t& panel_config,
     std::function<esp_err_t(const esp_lcd_panel_io_handle_t)> custom_init_panel_func,
-    void* vendor_config, std::function<void(void)> vendor_config_init_func)
+    void* vendor_config,
+    std::function<void(void)> vendor_config_init_func)
 {
     if (io_handle_ == nullptr)
     {

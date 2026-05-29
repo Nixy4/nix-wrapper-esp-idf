@@ -40,8 +40,11 @@ class Task
     static constexpr uint32_t MAX_DELAY_TICK = portMAX_DELAY;
     static constexpr uint32_t MAX_DELAY_MS = pdTICKS_TO_MS(portMAX_DELAY);
 
-    Task(const std::string& name, std::function<void(void*)> function, void* arg,
-         uint32_t stack_depth, UBaseType_t priority);
+    Task(const std::string& name,
+         std::function<void(void*)> function,
+         void* arg,
+         uint32_t stack_depth,
+         UBaseType_t priority);
 
     ~Task();
 
@@ -263,8 +266,10 @@ class EventGroup
 
     ~EventGroup();
 
-    EventBits_t WaitBits(const EventBits_t bits_to_wait_for, const bool clear_on_exit,
-                         const bool wait_for_all_bits, TickType_t wait_ticks = portMAX_DELAY);
+    EventBits_t WaitBits(const EventBits_t bits_to_wait_for,
+                         const bool clear_on_exit,
+                         const bool wait_for_all_bits,
+                         TickType_t wait_ticks = portMAX_DELAY);
 
     EventBits_t SetBits(const EventBits_t bits_to_set);
 
@@ -279,7 +284,8 @@ class EventGroup
 
     EventBits_t GetBitsFromISR() const;
 
-    EventBits_t Sync(const EventBits_t bits_to_set, const EventBits_t bits_to_wait_for,
+    EventBits_t Sync(const EventBits_t bits_to_set,
+                     const EventBits_t bits_to_wait_for,
                      TickType_t wait_ticks = portMAX_DELAY);
 
     EventGroupHandle_t GetHandle() const;
