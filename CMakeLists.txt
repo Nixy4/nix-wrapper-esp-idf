@@ -2,6 +2,7 @@ set(INCLUDE_DIRS "src")
 
 set(REQUIRES_ESP_IDF
   "log"
+  "console"
   "efuse"
   "nvs_flash"
   "esp_event"
@@ -14,6 +15,7 @@ set(REQUIRES_ESP_IDF
   "esp_driver_spi"
   "esp_driver_uart"
   "esp_driver_ledc"
+  "esp_driver_usb_serial_jtag"
 )
 set(REQUIRES_ESP_REGISTRY "")
 set(REQUIRES_PROJECT "")
