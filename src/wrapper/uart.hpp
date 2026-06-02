@@ -1,6 +1,8 @@
 #pragma once
 #include <cstring>
+#include <initializer_list>
 #include <string>
+#include <string_view>
 #include <vector>
 #include "driver/uart.h"
 #include "wrapper/logger.hpp"
@@ -137,6 +139,9 @@ class AtDevice : public UartDevice
     bool SendAtCmd(const std::string& cmd, std::string& response, int timeout_ms = 3000);
 
     bool WaitForKeyword(const std::string& keyword, std::string& response, int timeout_ms = 3000);
+    bool WaitForAnyKeyword(std::initializer_list<std::string_view> keywords,
+                           std::string& response,
+                           int timeout_ms = 3000);
 };
 
 }  // namespace wrapper

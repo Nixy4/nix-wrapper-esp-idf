@@ -335,6 +335,59 @@ bool AtDevice::SendAtCmd(const std::string& cmd, std::string& response, int time
     return SendAtCmd(cmd.c_str(), response, timeout_ms);
 }
 
+bool AtDevice::WaitForAnyKeyword(std::initializer_list<std::string_view> keywords,
+                                 std::string& response,
+                                 int timeout_ms)
+{
+    response.clear();
+    std::string line;
+    TickType_t deadline = xTaskGetTickCount() + pdMS_TO_TICKS(timeout_ms);
+
+    while (xTaskGetTickCount() < deadline)
+    {
+        int remaining_ms = static_cast<int>((deadline - xTaskGetTickCount()) * portTICK_PERIOD_MS);
+        if (remaining_ms <= 0)
+        {
+            break;
+        }
+        bool got = ReadLine(line, '\n', remaining_ms);
+        if (!got && line.empty())
+        {
+            break;
+        }
+        if (!line.empty() && line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (!line.empty())
+        {
+            if (!response.empty())
+            {
+                response += '\n';
+            }
+            response += line;
+        }
+        for (std::string_view kw : keywords)
+        {
+            if (response.find(kw) != std::string::npos || line.find(kw) != std::string::npos)
+            {
+                logger_.Info("AT<<< %s", response.c_str());
+                return true;
+            }
+        }
+    }
+
+    if (!response.empty())
+    {
+        logger_.Info("AT<<< %s", response.c_str());
+    }
+    else
+    {
+        logger_.Warning("AT: no response (timeout)");
+    }
+    return false;
+}
+
 bool AtDevice::WaitForKeyword(const std::string& keyword, std::string& response, int timeout_ms)
 {
     response.clear();
