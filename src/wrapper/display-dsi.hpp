@@ -2,6 +2,7 @@
 
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_mipi_dsi.h"
+#include "hal/gpio_types.h"
 #include "wrapper/logger.hpp"
 #include "wrapper/display.hpp"
 #include <functional>
@@ -40,7 +41,6 @@ struct DsiDisplayConfig
         uint8_t dpi_virtual_channel,
         mipi_dsi_dpi_clock_source_t dpi_clk_src,
         uint32_t dpi_clock_freq_mhz,
-        lcd_color_rgb_pixel_format_t pixel_format,
         lcd_color_format_t in_color_format,
         lcd_color_format_t out_color_format,
         uint8_t num_fbs,
@@ -54,10 +54,9 @@ struct DsiDisplayConfig
         uint32_t vsync_back_porch,
         uint32_t vsync_front_porch,
         // flags nested struct members
-        bool use_dma2d,
         bool disable_lp,
         // Panel Device config parameters
-        int reset_gpio_num,
+        gpio_num_t reset_gpio_num,
         lcd_rgb_element_order_t rgb_ele_order,
         lcd_rgb_data_endian_t data_endian,
         uint32_t bits_per_pixel,
@@ -73,7 +72,6 @@ struct DsiDisplayConfig
         this->dpi_config.virtual_channel = dpi_virtual_channel;
         this->dpi_config.dpi_clk_src = dpi_clk_src;
         this->dpi_config.dpi_clock_freq_mhz = dpi_clock_freq_mhz;
-        this->dpi_config.pixel_format = pixel_format;
         this->dpi_config.in_color_format = in_color_format;
         this->dpi_config.out_color_format = out_color_format;
         this->dpi_config.num_fbs = num_fbs;
@@ -87,7 +85,6 @@ struct DsiDisplayConfig
         this->dpi_config.video_timing.vsync_back_porch = vsync_back_porch;
         this->dpi_config.video_timing.vsync_front_porch = vsync_front_porch;
 
-        this->dpi_config.flags.use_dma2d = use_dma2d ? 1U : 0U;
         this->dpi_config.flags.disable_lp = disable_lp ? 1U : 0U;
 
         // Panel Device config

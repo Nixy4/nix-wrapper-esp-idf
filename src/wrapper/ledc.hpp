@@ -29,7 +29,6 @@ struct LedcChannelConfig : public ledc_channel_config_t
     LedcChannelConfig(gpio_num_t gpio_num,
                       ledc_mode_t speed_mode,
                       ledc_channel_t channel,
-                      ledc_intr_type_t intr_type,
                       ledc_timer_t timer_sel,
                       uint32_t duty,
                       int hpoint)
@@ -38,7 +37,6 @@ struct LedcChannelConfig : public ledc_channel_config_t
         this->gpio_num = gpio_num;
         this->speed_mode = speed_mode;
         this->channel = channel;
-        this->intr_type = intr_type;
         this->timer_sel = timer_sel;
         this->duty = duty;
         this->hpoint = hpoint;

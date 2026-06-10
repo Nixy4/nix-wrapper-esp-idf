@@ -28,7 +28,6 @@ LedcTimerConfig ledc_timer_cfg(LEDC_LOW_SPEED_MODE,  // speed_mode
 LedcChannelConfig ledc_channel_cfg(GPIO_NUM_22,          // gpio_num (M5TAB5_LCD_BACKLIGHT)
                                    LEDC_LOW_SPEED_MODE,  // speed_mode
                                    LEDC_CHANNEL_0,       // channel
-                                   LEDC_INTR_DISABLE,    // intr_type
                                    LEDC_TIMER_0,         // timer_sel
                                    0,                    // duty (初始为0)
                                    0                     // hpoint
@@ -52,13 +51,12 @@ DsiDisplayConfig dsi_display_cfg(
     8,  // lcd_cmd_bits
     8,  // lcd_param_bits
     // DPI Panel config parameters
-    0,                                   // dpi_virtual_channel
-    MIPI_DSI_DPI_CLK_SRC_DEFAULT,        // dpi_clk_src
-    60,                                  // dpi_clock_freq_mhz
-    LCD_COLOR_PIXEL_FORMAT_RGB565,       // pixel_format
-    static_cast<lcd_color_format_t>(0),  // in_color_format
-    static_cast<lcd_color_format_t>(0),  // out_color_format
-    1,                                   // num_fbs (官方默认值)
+    0,                             // dpi_virtual_channel
+    MIPI_DSI_DPI_CLK_SRC_DEFAULT,  // dpi_clk_src
+    60,                            // dpi_clock_freq_mhz
+    LCD_COLOR_FMT_RGB565,  // in_color_format (帧缓冲格式，与 LVGL LV_COLOR_FORMAT_RGB565 一致)
+    LCD_COLOR_FMT_RGB565,  // out_color_format (面板接受格式)
+    1,                     // num_fbs (官方默认值)
     // video_timing nested struct members
     720,   // h_size (BSP_LCD_H_RES)
     1280,  // v_size (BSP_LCD_V_RES)
@@ -69,7 +67,6 @@ DsiDisplayConfig dsi_display_cfg(
     20,    // vsync_back_porch
     20,    // vsync_front_porch
     // flags nested struct members
-    false,  // use_dma2d (单帧缓冲区时禁用以避免状态机冲突)
     false,  // disable_lp
     // Panel Device config parameters
     GPIO_NUM_NC,                // reset_gpio_num
