@@ -5,12 +5,12 @@
 namespace wrapper
 {
 
-Tab5Keyboard::Tab5Keyboard(Logger& logger)
-    : I2cDevice(logger), current_mode_(Tab5KeyboardMode::Normal), key_callback_(nullptr)
+M5Tab5Keyboard::M5Tab5Keyboard(Logger& logger)
+    : I2cDevice(logger), current_mode_(M5Tab5KeyboardMode::Normal), key_callback_(nullptr)
 {
 }
 
-bool Tab5Keyboard::Init(const I2cBus& bus)
+bool M5Tab5Keyboard::Init(const I2cBus& bus)
 {
     I2cDeviceConfig config(DEFAULT_ADDR, DEFAULT_SPEED);
     if (!I2cDevice::Init(bus, config))
@@ -31,7 +31,7 @@ bool Tab5Keyboard::Init(const I2cBus& bus)
     return true;
 }
 
-bool Tab5Keyboard::GetVersion(uint8_t& version)
+bool M5Tab5Keyboard::GetVersion(uint8_t& version)
 {
     if (!ReadReg8(REG_VERSION, version, kI2cTimeoutMs))
     {
@@ -41,7 +41,7 @@ bool Tab5Keyboard::GetVersion(uint8_t& version)
     return true;
 }
 
-bool Tab5Keyboard::SetMode(Tab5KeyboardMode mode)
+bool M5Tab5Keyboard::SetMode(M5Tab5KeyboardMode mode)
 {
     const uint8_t val = static_cast<uint8_t>(mode);
     if (!WriteReg8(REG_KEYBOARD_MODE, val, kI2cTimeoutMs))
@@ -61,7 +61,7 @@ bool Tab5Keyboard::SetMode(Tab5KeyboardMode mode)
     return true;
 }
 
-bool Tab5Keyboard::GetMode(Tab5KeyboardMode& mode)
+bool M5Tab5Keyboard::GetMode(M5Tab5KeyboardMode& mode)
 {
     uint8_t val = 0;
     if (!ReadReg8(REG_KEYBOARD_MODE, val, kI2cTimeoutMs))
@@ -69,11 +69,11 @@ bool Tab5Keyboard::GetMode(Tab5KeyboardMode& mode)
         logger_.Warning("Failed to read keyboard mode");
         return false;
     }
-    mode = static_cast<Tab5KeyboardMode>(val);
+    mode = static_cast<M5Tab5KeyboardMode>(val);
     return true;
 }
 
-bool Tab5Keyboard::SetRgb(uint8_t index, uint8_t r, uint8_t g, uint8_t b)
+bool M5Tab5Keyboard::SetRgb(uint8_t index, uint8_t r, uint8_t g, uint8_t b)
 {
     if (index > 1)
     {
@@ -94,7 +94,7 @@ bool Tab5Keyboard::SetRgb(uint8_t index, uint8_t r, uint8_t g, uint8_t b)
     return true;
 }
 
-bool Tab5Keyboard::SetBothRgb(uint8_t r, uint8_t g, uint8_t b)
+bool M5Tab5Keyboard::SetBothRgb(uint8_t r, uint8_t g, uint8_t b)
 {
     // 7-byte window: [RGB1_B, RGB1_G, RGB1_R, Reserved(0), RGB2_B, RGB2_G, RGB2_R]
     const uint8_t buf[7] = {b, g, r, 0x00, b, g, r};
@@ -106,7 +106,7 @@ bool Tab5Keyboard::SetBothRgb(uint8_t r, uint8_t g, uint8_t b)
     return true;
 }
 
-bool Tab5Keyboard::GetRgb(uint8_t index, uint8_t& r, uint8_t& g, uint8_t& b)
+bool M5Tab5Keyboard::GetRgb(uint8_t index, uint8_t& r, uint8_t& g, uint8_t& b)
 {
     if (index > 1)
     {
@@ -129,7 +129,7 @@ bool Tab5Keyboard::GetRgb(uint8_t index, uint8_t& r, uint8_t& g, uint8_t& b)
     return true;
 }
 
-bool Tab5Keyboard::SetRgbMode(Tab5RgbMode mode)
+bool M5Tab5Keyboard::SetRgbMode(M5Tab5RgbMode mode)
 {
     if (!WriteReg8(REG_RGB_MODE, static_cast<uint8_t>(mode), kI2cTimeoutMs))
     {
@@ -139,7 +139,7 @@ bool Tab5Keyboard::SetRgbMode(Tab5RgbMode mode)
     return true;
 }
 
-bool Tab5Keyboard::GetRgbMode(Tab5RgbMode& mode)
+bool M5Tab5Keyboard::GetRgbMode(M5Tab5RgbMode& mode)
 {
     uint8_t val = 0;
     if (!ReadReg8(REG_RGB_MODE, val, kI2cTimeoutMs))
@@ -147,11 +147,11 @@ bool Tab5Keyboard::GetRgbMode(Tab5RgbMode& mode)
         logger_.Warning("Failed to read RGB mode");
         return false;
     }
-    mode = static_cast<Tab5RgbMode>(val);
+    mode = static_cast<M5Tab5RgbMode>(val);
     return true;
 }
 
-bool Tab5Keyboard::SetBrightness(uint8_t brightness)
+bool M5Tab5Keyboard::SetBrightness(uint8_t brightness)
 {
     if (brightness > 100)
     {
@@ -166,7 +166,7 @@ bool Tab5Keyboard::SetBrightness(uint8_t brightness)
     return true;
 }
 
-bool Tab5Keyboard::GetBrightness(uint8_t& brightness)
+bool M5Tab5Keyboard::GetBrightness(uint8_t& brightness)
 {
     if (!ReadReg8(REG_BRIGHTNESS, brightness, kI2cTimeoutMs))
     {
@@ -176,7 +176,7 @@ bool Tab5Keyboard::GetBrightness(uint8_t& brightness)
     return true;
 }
 
-bool Tab5Keyboard::GetInterruptStatus(uint8_t& status)
+bool M5Tab5Keyboard::GetInterruptStatus(uint8_t& status)
 {
     if (!ReadReg8(REG_INT_STA, status, kI2cTimeoutMs))
     {
@@ -186,7 +186,7 @@ bool Tab5Keyboard::GetInterruptStatus(uint8_t& status)
     return true;
 }
 
-bool Tab5Keyboard::ClearInterruptStatus()
+bool M5Tab5Keyboard::ClearInterruptStatus()
 {
     if (!WriteReg8(REG_INT_STA, 0x00, kI2cTimeoutMs))
     {
@@ -196,7 +196,7 @@ bool Tab5Keyboard::ClearInterruptStatus()
     return true;
 }
 
-bool Tab5Keyboard::SetInterruptConfig(uint8_t config)
+bool M5Tab5Keyboard::SetInterruptConfig(uint8_t config)
 {
     if (!WriteReg8(REG_INT_CFG, config, kI2cTimeoutMs))
     {
@@ -206,7 +206,7 @@ bool Tab5Keyboard::SetInterruptConfig(uint8_t config)
     return true;
 }
 
-bool Tab5Keyboard::GetInterruptConfig(uint8_t& config)
+bool M5Tab5Keyboard::GetInterruptConfig(uint8_t& config)
 {
     if (!ReadReg8(REG_INT_CFG, config, kI2cTimeoutMs))
     {
@@ -216,7 +216,7 @@ bool Tab5Keyboard::GetInterruptConfig(uint8_t& config)
     return true;
 }
 
-bool Tab5Keyboard::GetEventCount(uint8_t& count)
+bool M5Tab5Keyboard::GetEventCount(uint8_t& count)
 {
     if (!ReadReg8(REG_EVENT_NUM, count, kI2cTimeoutMs))
     {
@@ -226,7 +226,7 @@ bool Tab5Keyboard::GetEventCount(uint8_t& count)
     return true;
 }
 
-bool Tab5Keyboard::ClearEventQueue()
+bool M5Tab5Keyboard::ClearEventQueue()
 {
     if (!WriteReg8(REG_EVENT_NUM, 0x00, kI2cTimeoutMs))
     {
@@ -236,16 +236,19 @@ bool Tab5Keyboard::ClearEventQueue()
     return true;
 }
 
-void Tab5Keyboard::SetKeyCallback(Tab5KeyCallback callback) { key_callback_ = std::move(callback); }
+void M5Tab5Keyboard::SetKeyCallback(M5Tab5KeyCallback callback)
+{
+    key_callback_ = std::move(callback);
+}
 
-bool Tab5Keyboard::ReadEvent(Tab5KeyEvent& event)
+bool M5Tab5Keyboard::ReadEvent(M5Tab5KeyEvent& event)
 {
     memset(&event, 0, sizeof(event));
     event.type = current_mode_;
 
     switch (current_mode_)
     {
-        case Tab5KeyboardMode::Normal:
+        case M5Tab5KeyboardMode::Normal:
         {
             uint8_t raw = 0;
             if (!ReadReg8(REG_KEY_EVENT, raw, kI2cTimeoutMs))
@@ -263,8 +266,8 @@ bool Tab5Keyboard::ReadEvent(Tab5KeyEvent& event)
             return true;
         }
 
-        case Tab5KeyboardMode::Hid:
-        case Tab5KeyboardMode::Ble:
+        case M5Tab5KeyboardMode::Hid:
+        case M5Tab5KeyboardMode::Ble:
         {
             std::vector<uint8_t> buf;
             if (!ReadRegBytes(REG_HID_EVENT, buf, 2, kI2cTimeoutMs))
@@ -280,7 +283,7 @@ bool Tab5Keyboard::ReadEvent(Tab5KeyEvent& event)
             return true;
         }
 
-        case Tab5KeyboardMode::String:
+        case M5Tab5KeyboardMode::String:
         {
             uint8_t len = 0;
             if (!ReadReg8(REG_CHAR_EVENT_LEN, len, kI2cTimeoutMs) || len == 0)
@@ -310,7 +313,7 @@ bool Tab5Keyboard::ReadEvent(Tab5KeyEvent& event)
     }
 }
 
-bool Tab5Keyboard::Poll()
+bool M5Tab5Keyboard::Poll()
 {
     uint8_t status = 0;
     if (!GetInterruptStatus(status))
@@ -322,10 +325,10 @@ bool Tab5Keyboard::Poll()
     const bool has_hid = (status & INT_STA_HID) != 0u;
     const bool has_string = (status & INT_STA_STRING) != 0u;
 
-    const bool has_event = (current_mode_ == Tab5KeyboardMode::Normal && has_normal) ||
-                           (current_mode_ == Tab5KeyboardMode::Hid && has_hid) ||
-                           (current_mode_ == Tab5KeyboardMode::Ble && has_hid) ||
-                           (current_mode_ == Tab5KeyboardMode::String && has_string);
+    const bool has_event = (current_mode_ == M5Tab5KeyboardMode::Normal && has_normal) ||
+                           (current_mode_ == M5Tab5KeyboardMode::Hid && has_hid) ||
+                           (current_mode_ == M5Tab5KeyboardMode::Ble && has_hid) ||
+                           (current_mode_ == M5Tab5KeyboardMode::String && has_string);
 
     if (!has_event)
     {
@@ -347,7 +350,7 @@ bool Tab5Keyboard::Poll()
 
     while (count > 0)
     {
-        Tab5KeyEvent event{};
+        M5Tab5KeyEvent event{};
         if (ReadEvent(event) && key_callback_)
         {
             key_callback_(event);
@@ -359,7 +362,7 @@ bool Tab5Keyboard::Poll()
     return true;
 }
 
-bool Tab5Keyboard::SetI2cAddress(uint8_t new_addr)
+bool M5Tab5Keyboard::SetI2cAddress(uint8_t new_addr)
 {
     if (new_addr < 0x08 || new_addr > 0x77)
     {
@@ -374,7 +377,7 @@ bool Tab5Keyboard::SetI2cAddress(uint8_t new_addr)
     return true;
 }
 
-bool Tab5Keyboard::GetI2cAddress(uint8_t& addr)
+bool M5Tab5Keyboard::GetI2cAddress(uint8_t& addr)
 {
     if (!ReadReg8(REG_I2C_ADDR, addr, kI2cTimeoutMs))
     {

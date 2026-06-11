@@ -3,17 +3,17 @@
 namespace wrapper
 {
 
-M5StackComXLTE::M5StackComXLTE(Logger& logger) : AtDevice(logger) {}
+M5ComXLTE::M5ComXLTE(Logger& logger) : AtDevice(logger) {}
 
-M5StackComXLTE::~M5StackComXLTE() {}
+M5ComXLTE::~M5ComXLTE() {}
 
-bool M5StackComXLTE::Init(UartPort& port) { return AtDevice::Init(port); }
+bool M5ComXLTE::Init(UartPort& port) { return AtDevice::Init(port); }
 
-bool M5StackComXLTE::Deinit() { return AtDevice::Deinit(); }
+bool M5ComXLTE::Deinit() { return AtDevice::Deinit(); }
 
 // --- private helper ---
 
-bool M5StackComXLTE::SendAndExpectOk(const char* cmd, std::string& response, int timeout_ms)
+bool M5ComXLTE::SendAndExpectOk(const char* cmd, std::string& response, int timeout_ms)
 {
     FlushInput();
     if (WriteAtCmd(cmd) < 0)
@@ -25,7 +25,7 @@ bool M5StackComXLTE::SendAndExpectOk(const char* cmd, std::string& response, int
 
 // --- AT: Basic test ---
 
-bool M5StackComXLTE::Test(int timeout_ms)
+bool M5ComXLTE::Test(int timeout_ms)
 {
     std::string response;
     return SendAndExpectOk("AT", response, timeout_ms);
@@ -35,7 +35,7 @@ bool M5StackComXLTE::Test(int timeout_ms)
 // Sends "A/" without CR/LF; the module re-executes the previous command.
 // Maximum response time follows the previous command (up to 120000ms).
 
-bool M5StackComXLTE::RepeatLastCommand(int timeout_ms)
+bool M5ComXLTE::RepeatLastCommand(int timeout_ms)
 {
     FlushInput();
     int written = WriteBytes(reinterpret_cast<const uint8_t*>("A/\r"), 3);
@@ -51,7 +51,7 @@ bool M5StackComXLTE::RepeatLastCommand(int timeout_ms)
 // Responses: OK / NO CARRIER / NO ANSWER / NO DIALTONE / BUSY / CONNECT<text>
 // <mgsm>: I=activate CLIR, i=deactivate CLIR, G=activate CUG, g=deactivate CUG
 
-bool M5StackComXLTE::DialNumber(const std::string& number,
+bool M5ComXLTE::DialNumber(const std::string& number,
                                 const std::string& mgsm,
                                 int timeout_ms,
                                 int connect_timeout_ms)
@@ -166,7 +166,7 @@ bool M5StackComXLTE::DialNumber(const std::string& number,
 // <n>: index returned by AT+CPBR
 // voice_call=true appends ";", must NOT be used for data/fax calls
 
-bool M5StackComXLTE::DialSpecifiedMem(const std::string& mem,
+bool M5ComXLTE::DialSpecifiedMem(const std::string& mem,
                                       int index,
                                       bool voice_call,
                                       int timeout_ms)
@@ -226,7 +226,7 @@ bool M5StackComXLTE::DialSpecifiedMem(const std::string& mem,
 // voice_call=true appends ";"; must NOT be used for data/fax calls.
 // Note: not supported by some telecom operators.
 
-bool M5StackComXLTE::DialActiveMem(int index, bool voice_call, int timeout_ms)
+bool M5ComXLTE::DialActiveMem(int index, bool voice_call, int timeout_ms)
 {
     std::string cmd = "ATD>" + std::to_string(index);
     if (voice_call)
@@ -283,7 +283,7 @@ bool M5StackComXLTE::DialActiveMem(int index, bool voice_call, int timeout_ms)
 // voice_call=true appends ";"; must NOT be used for data/fax calls.
 // Note: not supported by some telecom operators.
 
-bool M5StackComXLTE::DialActiveMemByName(const std::string& name, bool voice_call, int timeout_ms)
+bool M5ComXLTE::DialActiveMemByName(const std::string& name, bool voice_call, int timeout_ms)
 {
     // Wrap name in double quotes as required by the spec
     std::string cmd = "ATD>\"" + name + "\"";
@@ -338,7 +338,7 @@ bool M5StackComXLTE::DialActiveMemByName(const std::string& name, bool voice_cal
 // --- ATA: Answer incoming call ---
 // If no incoming call, TA returns NO CARRIER.
 
-bool M5StackComXLTE::AnswerCall(int timeout_ms)
+bool M5ComXLTE::AnswerCall(int timeout_ms)
 {
     FlushInput();
     if (WriteAtCmd("ATA") < 0)
@@ -369,7 +369,7 @@ bool M5StackComXLTE::AnswerCall(int timeout_ms)
 
 // --- ATE: Echo mode ---
 
-bool M5StackComXLTE::SetEchoMode(bool enable, int timeout_ms)
+bool M5ComXLTE::SetEchoMode(bool enable, int timeout_ms)
 {
     std::string response;
     return SendAndExpectOk(enable ? "ATE1" : "ATE0", response, timeout_ms);
@@ -377,7 +377,7 @@ bool M5StackComXLTE::SetEchoMode(bool enable, int timeout_ms)
 
 // --- ATH: Hangup ---
 
-bool M5StackComXLTE::Hangup(int timeout_ms)
+bool M5ComXLTE::Hangup(int timeout_ms)
 {
     std::string response;
     return SendAndExpectOk("ATH", response, timeout_ms);
@@ -385,14 +385,14 @@ bool M5StackComXLTE::Hangup(int timeout_ms)
 
 // --- ATI: Product info ---
 
-bool M5StackComXLTE::GetProductInfo(std::string& info, int timeout_ms)
+bool M5ComXLTE::GetProductInfo(std::string& info, int timeout_ms)
 {
     return SendAndExpectOk("ATI", info, timeout_ms);
 }
 
 // --- +++: Switch to command mode ---
 
-bool M5StackComXLTE::SwitchToCommandMode(int timeout_ms)
+bool M5ComXLTE::SwitchToCommandMode(int timeout_ms)
 {
     // +++ requires a guard time silence before and after (typically 1s)
     vTaskDelay(pdMS_TO_TICKS(1100));
@@ -410,7 +410,7 @@ bool M5StackComXLTE::SwitchToCommandMode(int timeout_ms)
 
 // --- ATO: Switch to data mode ---
 
-bool M5StackComXLTE::SwitchToDataMode(int timeout_ms)
+bool M5ComXLTE::SwitchToDataMode(int timeout_ms)
 {
     std::string response;
     return SendAndExpectOk("ATO", response, timeout_ms);
@@ -418,7 +418,7 @@ bool M5StackComXLTE::SwitchToDataMode(int timeout_ms)
 
 // --- ATS0: Auto answer ---
 
-bool M5StackComXLTE::SetAutoAnswer(int rings, int timeout_ms)
+bool M5ComXLTE::SetAutoAnswer(int rings, int timeout_ms)
 {
     std::string cmd = "ATS0=" + std::to_string(rings);
     std::string response;
@@ -427,7 +427,7 @@ bool M5StackComXLTE::SetAutoAnswer(int rings, int timeout_ms)
 
 // --- ATZ: Reset default configuration ---
 
-bool M5StackComXLTE::ResetDefaultConfiguration(int timeout_ms)
+bool M5ComXLTE::ResetDefaultConfiguration(int timeout_ms)
 {
     std::string response;
     return SendAndExpectOk("ATZ", response, timeout_ms);
@@ -435,42 +435,42 @@ bool M5StackComXLTE::ResetDefaultConfiguration(int timeout_ms)
 
 // --- AT+GCAP: Capabilities ---
 
-bool M5StackComXLTE::GetCapabilities(std::string& caps, int timeout_ms)
+bool M5ComXLTE::GetCapabilities(std::string& caps, int timeout_ms)
 {
     return SendAndExpectOk("AT+GCAP", caps, timeout_ms);
 }
 
 // --- AT+GMI: Manufacturer ---
 
-bool M5StackComXLTE::GetManufacturer(std::string& info, int timeout_ms)
+bool M5ComXLTE::GetManufacturer(std::string& info, int timeout_ms)
 {
     return SendAndExpectOk("AT+GMI", info, timeout_ms);
 }
 
 // --- AT+GMM: Model ---
 
-bool M5StackComXLTE::GetModel(std::string& info, int timeout_ms)
+bool M5ComXLTE::GetModel(std::string& info, int timeout_ms)
 {
     return SendAndExpectOk("AT+GMM", info, timeout_ms);
 }
 
 // --- AT+GMR: Revision ---
 
-bool M5StackComXLTE::GetRevision(std::string& info, int timeout_ms)
+bool M5ComXLTE::GetRevision(std::string& info, int timeout_ms)
 {
     return SendAndExpectOk("AT+GMR", info, timeout_ms);
 }
 
 // --- AT+GSN: IMEI ---
 
-bool M5StackComXLTE::GetIMEI(std::string& imei, int timeout_ms)
+bool M5ComXLTE::GetIMEI(std::string& imei, int timeout_ms)
 {
     return SendAndExpectOk("AT+GSN", imei, timeout_ms);
 }
 
 // --- AT+IPR: Fixed baud rate ---
 
-bool M5StackComXLTE::SetFixedBaudRate(int rate, int timeout_ms)
+bool M5ComXLTE::SetFixedBaudRate(int rate, int timeout_ms)
 {
     std::string cmd = "AT+IPR=" + std::to_string(rate);
     std::string response;

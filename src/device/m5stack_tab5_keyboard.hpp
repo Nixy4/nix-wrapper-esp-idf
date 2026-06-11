@@ -17,7 +17,7 @@ namespace wrapper
 /// Hid    : 返回 USB HID modifier + keycode，可直接转发给主机
 /// String : 返回键名字符串及 Ctrl/Alt 修饰符（Character 模式）
 /// Ble    : BLE HID 转发模式（格式与 Hid 相同）
-enum class Tab5KeyboardMode : uint8_t
+enum class M5Tab5KeyboardMode : uint8_t
 {
     Normal = 0,
     Hid = 1,
@@ -28,7 +28,7 @@ enum class Tab5KeyboardMode : uint8_t
 /// @brief RGB LED 工作模式
 /// Binding : 固件自动绑定 LED 颜色（用于指示当前键盘模式）
 /// Custom  : 用户手动控制 LED 颜色
-enum class Tab5RgbMode : uint8_t
+enum class M5Tab5RgbMode : uint8_t
 {
     Binding = 0,
     Custom = 1,
@@ -39,9 +39,9 @@ enum class Tab5RgbMode : uint8_t
 // ============================================================
 
 /// @brief 统一键盘事件，各字段按 type 分模式使用
-struct Tab5KeyEvent
+struct M5Tab5KeyEvent
 {
-    Tab5KeyboardMode type;  ///< 事件来源模式
+    M5Tab5KeyboardMode type;  ///< 事件来源模式
 
     // ---- Normal 模式字段 ----
     bool pressed;      ///< true=按下, false=释放
@@ -60,7 +60,7 @@ struct Tab5KeyEvent
 };
 
 /// @brief 键盘事件回调类型
-using Tab5KeyCallback = std::function<void(const Tab5KeyEvent&)>;
+using M5Tab5KeyCallback = std::function<void(const M5Tab5KeyEvent&)>;
 
 // ============================================================
 // Tab5 键盘驱动
@@ -69,7 +69,7 @@ using Tab5KeyCallback = std::function<void(const Tab5KeyEvent&)>;
 // MCU: STM32F030C8T6，支持 14×5 矩阵，70 键
 // ============================================================
 
-class Tab5Keyboard : public I2cDevice
+class M5Tab5Keyboard : public I2cDevice
 {
    public:
     // ---- 设备默认参数 ----
@@ -106,8 +106,8 @@ class Tab5Keyboard : public I2cDevice
     static constexpr uint8_t INT_STA_STRING = (1u << 2);  ///< String 模式有事件待读
 
    public:
-    explicit Tab5Keyboard(Logger& logger);
-    ~Tab5Keyboard() = default;
+    explicit M5Tab5Keyboard(Logger& logger);
+    ~M5Tab5Keyboard() = default;
 
     // ---- 初始化 ----
 
@@ -124,10 +124,10 @@ class Tab5Keyboard : public I2cDevice
     // ---- 工作模式 ----
 
     /// @brief 设置键盘工作模式；切换时会自动清空事件队列和中断状态
-    bool SetMode(Tab5KeyboardMode mode);
+    bool SetMode(M5Tab5KeyboardMode mode);
 
     /// @brief 读取当前键盘工作模式
-    bool GetMode(Tab5KeyboardMode& mode);
+    bool GetMode(M5Tab5KeyboardMode& mode);
 
     // ---- RGB LED 控制（需先调用 SetRgbMode(Custom)）----
 
@@ -143,10 +143,10 @@ class Tab5Keyboard : public I2cDevice
     bool GetRgb(uint8_t index, uint8_t& r, uint8_t& g, uint8_t& b);
 
     /// @brief 设置 RGB LED 工作模式（Binding=固件控制, Custom=用户控制）
-    bool SetRgbMode(Tab5RgbMode mode);
+    bool SetRgbMode(M5Tab5RgbMode mode);
 
     /// @brief 读取 RGB LED 当前工作模式
-    bool GetRgbMode(Tab5RgbMode& mode);
+    bool GetRgbMode(M5Tab5RgbMode& mode);
 
     // ---- 背光亮度 ----
 
@@ -183,7 +183,7 @@ class Tab5Keyboard : public I2cDevice
     // ---- 按键回调与轮询 ----
 
     /// @brief 注册按键事件回调；传入 nullptr 时清除回调
-    void SetKeyCallback(Tab5KeyCallback callback);
+    void SetKeyCallback(M5Tab5KeyCallback callback);
 
     /// @brief 轮询一次键盘事件
     /// 读取 INT_STA → 按需读取全部事件 → 依次调用回调 → 清除 INT_STA
@@ -201,14 +201,14 @@ class Tab5Keyboard : public I2cDevice
     bool GetI2cAddress(uint8_t& addr);
 
    private:
-    Tab5KeyboardMode current_mode_;  ///< 当前工作模式缓存
-    Tab5KeyCallback key_callback_;   ///< 用户注册的事件回调
+    M5Tab5KeyboardMode current_mode_;  ///< 当前工作模式缓存
+    M5Tab5KeyCallback key_callback_;   ///< 用户注册的事件回调
 
     static constexpr int kI2cTimeoutMs = 100;  ///< I2C 操作超时 ms
 
     /// @brief 从设备读取一条事件并填充 event（内部辅助函数）
     /// @return true 读取成功（含空队列情况），false I2C 错误
-    bool ReadEvent(Tab5KeyEvent& event);
+    bool ReadEvent(M5Tab5KeyEvent& event);
 };
 
 }  // namespace wrapper

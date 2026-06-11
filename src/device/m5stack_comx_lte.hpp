@@ -2,13 +2,13 @@
 
 namespace wrapper
 {
-class M5StackComXLTE : public AtDevice
+class M5ComXLTE : public AtDevice
 {
    public:
     constexpr static int kDefaultTimeoutMs = 3000;
 
-    M5StackComXLTE(Logger& logger);
-    ~M5StackComXLTE();
+    M5ComXLTE(Logger& logger);
+    ~M5ComXLTE();
 
     bool Init(UartPort& port);
     bool Deinit();
