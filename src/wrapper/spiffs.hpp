@@ -14,8 +14,8 @@ namespace wrapper
  */
 struct SpiffsInfo
 {
-    size_t total_bytes; ///< 分区总字节数
-    size_t used_bytes;  ///< 已使用字节数
+    size_t total_bytes;  ///< 分区总字节数
+    size_t used_bytes;   ///< 已使用字节数
 };
 
 /**
@@ -27,14 +27,14 @@ struct SpiffsInfo
 struct SpiffsConfig : public esp_vfs_spiffs_conf_t
 {
     SpiffsConfig(const char* base_path,
-                 const char* partition_label        = nullptr,
-                 size_t      max_files              = 5,
-                 bool        format_if_mount_failed = false)
+                 const char* partition_label = nullptr,
+                 size_t max_files = 5,
+                 bool format_if_mount_failed = false)
         : esp_vfs_spiffs_conf_t{}
     {
-        this->base_path              = base_path;
-        this->partition_label        = partition_label;
-        this->max_files              = max_files;
+        this->base_path = base_path;
+        this->partition_label = partition_label;
+        this->max_files = max_files;
         this->format_if_mount_failed = format_if_mount_failed;
     }
 };
@@ -50,15 +50,16 @@ struct SpiffsConfig : public esp_vfs_spiffs_conf_t
  */
 class Spiffs
 {
-    Logger&     logger_;
-    bool        mounted_;
+    Logger& logger_;
+    bool mounted_;
     std::string partition_label_;  ///< 空字符串表示使用默认分区
+    std::string base_path_;        ///< VFS 挂载点
 
    public:
     explicit Spiffs(Logger& logger);
     ~Spiffs();
 
-    Spiffs(const Spiffs&)            = delete;
+    Spiffs(const Spiffs&) = delete;
     Spiffs& operator=(const Spiffs&) = delete;
 
     // -----------------------------------------------------------------------
@@ -75,8 +76,9 @@ class Spiffs
     // 状态查询
     // -----------------------------------------------------------------------
 
-    bool               IsMounted()          const { return mounted_; }
-    const std::string& GetPartitionLabel()  const { return partition_label_; }
+    bool IsMounted() const { return mounted_; }
+    const std::string& GetBasePath() const { return base_path_; }
+    const std::string& GetPartitionLabel() const { return partition_label_; }
 
     /**
      * @brief 获取 SPIFFS 容量信息
@@ -104,6 +106,16 @@ class Spiffs
      * @param size_to_gc  目标回收字节数；传入 0 则由 SPIFFS 自行决定回收量
      */
     bool GarbageCollect(size_t size_to_gc);
+
+    // -----------------------------------------------------------------------
+    // 测试
+    // -----------------------------------------------------------------------
+
+    /**
+     * @brief 对已挂载的 SPIFFS 执行读写验证（需先调用 Init()）
+     * @return true = 全部步骤成功
+     */
+    bool Test();
 
    private:
     /** @brief 返回用于 IDF API 的分区标签（空字符串 → nullptr）*/

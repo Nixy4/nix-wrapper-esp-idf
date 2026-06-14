@@ -200,6 +200,12 @@ class M5Tab5Keyboard : public I2cDevice
     /// @brief 读取当前 I2C 地址寄存器值
     bool GetI2cAddress(uint8_t& addr);
 
+    // ---- 测试 ----
+
+    /// @brief 切换到 String 模式，设置 LED 颜色，将按键事件打印到日志（阻塞轮询循环）
+    /// @note 需先调用 Init()
+    void Test();
+
    private:
     M5Tab5KeyboardMode current_mode_;  ///< 当前工作模式缓存
     M5Tab5KeyCallback key_callback_;   ///< 用户注册的事件回调

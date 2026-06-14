@@ -1,6 +1,8 @@
 #include "m5stack_tab5_keyboard.hpp"
 
 #include <cstring>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 namespace wrapper
 {
@@ -385,6 +387,46 @@ bool M5Tab5Keyboard::GetI2cAddress(uint8_t& addr)
         return false;
     }
     return true;
+}
+
+// ---------------------------------------------------------------------------
+// 测试
+// ---------------------------------------------------------------------------
+
+void M5Tab5Keyboard::Test()
+{
+    SetMode(M5Tab5KeyboardMode::String);
+    SetRgbMode(M5Tab5RgbMode::Custom);
+    SetBrightness(10);
+    SetRgb(0, 0, 255, 0);  // 左 LED 绿色
+    SetRgb(1, 0, 0, 255);  // 右 LED 蓝色
+
+    SetKeyCallback(
+        [this](const M5Tab5KeyEvent& e)
+        {
+            if (e.type != M5Tab5KeyboardMode::String)
+                return;
+
+            const bool has_ctrl = (e.str_modifier & 0x01u) != 0u;
+            const bool has_alt = (e.str_modifier & 0x04u) != 0u;
+
+            if (has_ctrl || has_alt)
+            {
+                logger_.Info("Key: [%s%s%s]", has_ctrl ? "Ctrl+" : "", has_alt ? "Alt+" : "",
+                             e.str_data);
+            }
+            else
+            {
+                logger_.Info("Key: \"%s\"", e.str_data);
+            }
+        });
+
+    logger_.Info("Test started (String mode). Polling every 50 ms.");
+    for (;;)
+    {
+        Poll();
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
 }
 
 }  // namespace wrapper

@@ -18,17 +18,17 @@ namespace wrapper
  */
 struct SdMmcMountConfig : public esp_vfs_fat_mount_config_t
 {
-    SdMmcMountConfig(bool   format_if_mount_failed   = false,
-                     int    max_files                = 5,
-                     size_t allocation_unit_size     = 0,
-                     bool   disk_status_check_enable = false)
+    SdMmcMountConfig(bool format_if_mount_failed = false,
+                     int max_files = 5,
+                     size_t allocation_unit_size = 0,
+                     bool disk_status_check_enable = false)
         : esp_vfs_fat_mount_config_t{}
     {
-        this->format_if_mount_failed   = format_if_mount_failed;
-        this->max_files                = max_files;
-        this->allocation_unit_size     = allocation_unit_size;
+        this->format_if_mount_failed = format_if_mount_failed;
+        this->max_files = max_files;
+        this->allocation_unit_size = allocation_unit_size;
         this->disk_status_check_enable = disk_status_check_enable;
-        this->use_one_fat              = false;
+        this->use_one_fat = false;
     }
 };
 
@@ -40,31 +40,31 @@ struct SdMmcSlotConfig : public sdmmc_slot_config_t
     SdMmcSlotConfig(gpio_num_t gpio_clk,
                     gpio_num_t gpio_cmd,
                     gpio_num_t gpio_d0,
-                    gpio_num_t gpio_d1   = GPIO_NUM_NC,
-                    gpio_num_t gpio_d2   = GPIO_NUM_NC,
-                    gpio_num_t gpio_d3   = GPIO_NUM_NC,
-                    gpio_num_t gpio_d4   = GPIO_NUM_NC,
-                    gpio_num_t gpio_d5   = GPIO_NUM_NC,
-                    gpio_num_t gpio_d6   = GPIO_NUM_NC,
-                    gpio_num_t gpio_d7   = GPIO_NUM_NC,
-                    uint8_t    width     = SDMMC_SLOT_WIDTH_DEFAULT,
-                    gpio_num_t gpio_cd   = SDMMC_SLOT_NO_CD,
-                    gpio_num_t gpio_wp   = SDMMC_SLOT_NO_WP,
-                    uint32_t   flags     = 0)
+                    gpio_num_t gpio_d1 = GPIO_NUM_NC,
+                    gpio_num_t gpio_d2 = GPIO_NUM_NC,
+                    gpio_num_t gpio_d3 = GPIO_NUM_NC,
+                    gpio_num_t gpio_d4 = GPIO_NUM_NC,
+                    gpio_num_t gpio_d5 = GPIO_NUM_NC,
+                    gpio_num_t gpio_d6 = GPIO_NUM_NC,
+                    gpio_num_t gpio_d7 = GPIO_NUM_NC,
+                    uint8_t width = SDMMC_SLOT_WIDTH_DEFAULT,
+                    gpio_num_t gpio_cd = SDMMC_SLOT_NO_CD,
+                    gpio_num_t gpio_wp = SDMMC_SLOT_NO_WP,
+                    uint32_t flags = 0)
         : sdmmc_slot_config_t{}
     {
-        this->clk   = gpio_clk;
-        this->cmd   = gpio_cmd;
-        this->d0    = gpio_d0;
-        this->d1    = gpio_d1;
-        this->d2    = gpio_d2;
-        this->d3    = gpio_d3;
-        this->d4    = gpio_d4;
-        this->d5    = gpio_d5;
-        this->d6    = gpio_d6;
-        this->d7    = gpio_d7;
-        this->cd    = gpio_cd;
-        this->wp    = gpio_wp;
+        this->clk = gpio_clk;
+        this->cmd = gpio_cmd;
+        this->d0 = gpio_d0;
+        this->d1 = gpio_d1;
+        this->d2 = gpio_d2;
+        this->d3 = gpio_d3;
+        this->d4 = gpio_d4;
+        this->d5 = gpio_d5;
+        this->d6 = gpio_d6;
+        this->d7 = gpio_d7;
+        this->cd = gpio_cd;
+        this->wp = gpio_wp;
         this->width = width;
         this->flags = flags;
     }
@@ -80,17 +80,17 @@ struct SdMmcSlotConfig : public sdmmc_slot_config_t
  */
 class SdMmc
 {
-    Logger&       logger_;
+    Logger& logger_;
     sdmmc_card_t* card_;
-    int           slot_;
-    bool          mounted_;
-    std::string   base_path_;
+    int slot_;
+    bool mounted_;
+    std::string base_path_;
 
    public:
     explicit SdMmc(Logger& logger);
     ~SdMmc();
 
-    SdMmc(const SdMmc&)            = delete;
+    SdMmc(const SdMmc&) = delete;
     SdMmc& operator=(const SdMmc&) = delete;
 
     // -----------------------------------------------------------------------
@@ -105,10 +105,10 @@ class SdMmc
      * @param mount_config FAT 挂载配置
      * @param base_path    VFS 挂载路径，默认 "/sdcard"
      */
-    bool Init(int                     slot,
-              const SdMmcSlotConfig&  slot_config,
+    bool Init(int slot,
+              const SdMmcSlotConfig& slot_config,
               const SdMmcMountConfig& mount_config,
-              std::string_view        base_path = "/sdcard");
+              std::string_view base_path = "/sdcard");
 
     /** @brief 卸载 SD 卡，释放 VFS 资源 */
     bool Deinit();
@@ -117,7 +117,7 @@ class SdMmc
     // 状态查询
     // -----------------------------------------------------------------------
 
-    bool               IsMounted()   const { return mounted_; }
+    bool IsMounted() const { return mounted_; }
     const std::string& GetBasePath() const { return base_path_; }
 
     /**
@@ -172,8 +172,8 @@ class SdMmc
      * @brief 擦除扇区
      * @param mode  擦除模式（Erase / Discard），默认 Erase
      */
-    bool EraseSectors(size_t      start_sector,
-                      size_t      sector_count,
+    bool EraseSectors(size_t start_sector,
+                      size_t sector_count,
                       SdEraseMode mode = SdEraseMode::Erase) const;
 
     // -----------------------------------------------------------------------
@@ -185,6 +185,16 @@ class SdMmc
 
     /** @brief 向标准输出打印卡信息 */
     void PrintInfo() const;
+
+    // -----------------------------------------------------------------------
+    // 测试
+    // -----------------------------------------------------------------------
+
+    /**
+     * @brief 对已挂载的 SD 卡执行读写验证（需先调用 Init()）
+     * @return true = 全部步骤成功
+     */
+    bool Test();
 };
 
 }  // namespace wrapper
