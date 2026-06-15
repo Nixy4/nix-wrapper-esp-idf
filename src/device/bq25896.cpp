@@ -119,4 +119,29 @@ bool Bq25896::DisableMeasure()
     return true;
 }
 
+bool Bq25896::Shutdown(bool delayed)
+{
+    // REG09[5] = BATFET_DIS : 1 = disconnect BATFET → VSYS loses power
+    // REG09[3] = BATFET_DLY : 0 = immediate, 1 = ~10 s delay
+    // NOTE: Has no effect when USB-C VBUS is present.
+    uint8_t val = 0;
+    if (!device_.ReadReg8(REG09, val, -1))
+        return false;
+
+    if (delayed)
+        val |= (1u << 3);  // BATFET_DLY
+    else
+        val &= ~(1u << 3);  // immediate
+
+    val |= (1u << 5);  // BATFET_DIS
+
+    if (!device_.WriteReg8(REG09, val, -1))
+    {
+        logger_.Error("Failed to write BATFET_DIS");
+        return false;
+    }
+    logger_.Info("Shutdown requested (delayed=%d)", delayed ? 1 : 0);
+    return true;
+}
+
 }  // namespace wrapper

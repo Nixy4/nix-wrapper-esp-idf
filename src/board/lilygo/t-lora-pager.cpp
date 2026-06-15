@@ -42,8 +42,8 @@ static constexpr uint32_t kXl9555PinSdEn = 6;     // TODO: confirm from schemati
 static constexpr uint32_t kXl9555PinSdDet = 7;    // TODO: confirm from schematic (input)
 static constexpr uint32_t kXl9555PinDispRst = 8;  // TODO: confirm from schematic (optional)
 
-// ES8311 I2C address (7-bit: 0x18)
-static constexpr uint8_t kEs8311Addr = 0x18;
+// ES8311 I2C address (8-bit form expected by esp_codec_dev: 7-bit 0x18 << 1 = 0x30)
+static constexpr uint8_t kEs8311Addr = 0x30;
 
 // =============================================================================
 // Bus configurations
@@ -194,7 +194,7 @@ LvglDisplayConfig lvgl_display_cfg(480 * 60,                // buffer_size (one 
                                    480,                     // hres
                                    222,                     // vres
                                    false,                   // monochrome
-                                   false,                   // swap_xy
+                                   true,                    // swap_xy
                                    false,                   // mirror_x
                                    false,                   // mirror_y
                                    LV_COLOR_FORMAT_RGB565,  // color_format
@@ -229,7 +229,7 @@ I2cBus i2c_bus(l_i2c);
 SpiBus spi_bus(l_spi);
 I2sBus i2s_bus(l_i2s);
 Xl9555 xl9555(l_xlio);
-St7796 display(l_disp, spi_bus);
+St7796 display(l_disp);
 LedcTimer ledc_timer(l_ledc);
 LedcChannel ledc_channel(l_ledc);
 AudioCodec audio_codec(l_audio);

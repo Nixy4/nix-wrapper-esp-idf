@@ -60,6 +60,18 @@ class Bq25896
     /** @brief Disable ADC continuous conversion */
     bool DisableMeasure();
 
+    /**
+     * @brief Software power-off via BATFET disable (REG09 bit[5] = BATFET_DIS).
+     *
+     * Sets BATFET_DIS=1 to disconnect the battery FET and cut VSYS power.
+     * Only effective when USB-C is NOT connected (BQ25896 hardware limitation).
+     *
+     * @param delayed  false = immediate cutoff;
+     *                 true  = ~10 s delay (BATFET_DLY=1) to allow graceful shutdown.
+     * @return true if the I²C write succeeded.
+     */
+    bool Shutdown(bool delayed = false);
+
     Logger& GetLogger() { return logger_; }
 
    private:

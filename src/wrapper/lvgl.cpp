@@ -222,15 +222,7 @@ void LvglPort::Test(bool is_monochrome)
         lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
 
         // Font selection based on screen size
-        if (min_dim >= 480)
-        {
-            lv_obj_set_style_text_font(label, &lv_font_montserrat_28, 0);
-        }
-        else if (min_dim >= 240)
-        {
-            lv_obj_set_style_text_font(label, &lv_font_montserrat_20, 0);
-        }
-        else if (min_dim >= 128)
+        if (min_dim >= 128)
         {
             lv_obj_set_style_text_font(label, &lv_font_montserrat_14, 0);
         }
