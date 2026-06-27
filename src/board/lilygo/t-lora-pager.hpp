@@ -10,6 +10,7 @@
 #include "wrapper/audio.hpp"
 #include "wrapper/lvgl.hpp"
 #include "wrapper/encoder.hpp"
+#include "wrapper/sd_spi.hpp"
 #include "device/xl9555.hpp"
 #include "device/st7796.hpp"
 #include "device/tca8418.hpp"
@@ -32,6 +33,7 @@ namespace wrapper
  *   - ES8311 音频编解码器 via AudioCodec
  *   - TCA8418 键盘矩阵控制器 (addr=0x34, INT=GPIO6)
  *   - BQ25896 电池充电器 (addr=0x6B)
+ *   - SdSpi SD 卡（SPI 模式，CS=GPIO21），VFS FAT 挂载到 /sdcard
  *
  * 用法：
  * @code
@@ -41,6 +43,7 @@ namespace wrapper
  *   board.GetLvglPort().SetRotation(LV_DISPLAY_ROTATION_0);
  *   board.InitAudio();
  *   board.InitKeyboard();
+ *   board.InitSdCard();
  * @endcode
  */
 class LilyGoLoraPager
@@ -92,6 +95,18 @@ class LilyGoLoraPager
      */
     bool InitEncoder();
 
+    /**
+     * @brief 初始化 SD 卡（SPI 模式）并将 FAT 文件系统挂载到 VFS /sdcard。
+     *
+     * 通过 XL9555 使能 SD 电源轨，然后在共享 SPI 总线（CS=GPIO21）上
+     * 完成卡识别与 FAT 挂载。挂载成功后可通过 POSIX/C 文件 API
+     * 访问 "/sdcard/..."。
+     *
+     * @note 必须在 InitDisplay()（SPI 总线）和 InitCoreBusAndIoExpander()
+     *       （XL9555）之后调用。
+     */
+    bool InitSdCard();
+
     // -----------------------------------------------------------------------
     // 获取器
     // -----------------------------------------------------------------------
@@ -109,6 +124,7 @@ class LilyGoLoraPager
     Bq25896& GetPmu();
     Encoder& GetEncoder();
     LilyGoLoRaPagerKeyboard& GetKeyboardDriver();
+    SdSpi& GetSdCard();
 
     // -----------------------------------------------------------------------
     // 便捷辅助方法
