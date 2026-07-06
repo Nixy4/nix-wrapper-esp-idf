@@ -10,7 +10,7 @@
 #include "wrapper/spi.hpp"
 #include "wrapper/display.hpp"
 #include "wrapper/i2s.hpp"
-#include "wrapper/audio.hpp"
+#include "registry/audio.hpp"
 #include "device/m5stack_cardputer_keyboard.hpp"
 
 namespace wrapper

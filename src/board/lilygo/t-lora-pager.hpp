@@ -7,8 +7,8 @@
 #include "wrapper/i2s.hpp"
 #include "wrapper/ledc.hpp"
 #include "wrapper/display.hpp"
-#include "wrapper/audio.hpp"
-#include "wrapper/lvgl.hpp"
+#include "registry/audio.hpp"
+#include "registry/lvgl.hpp"
 #include "wrapper/encoder.hpp"
 #include "wrapper/sd_spi.hpp"
 #include "device/xl9555.hpp"
@@ -49,7 +49,7 @@ namespace wrapper
 class LilyGoLoraPager
 {
    private:
-        LilyGoLoraPager() = default;
+    LilyGoLoraPager() = default;
     ~LilyGoLoraPager() = default;
 
     LilyGoLoraPager(const LilyGoLoraPager&) = delete;

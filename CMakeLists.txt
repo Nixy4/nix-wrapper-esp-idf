@@ -1,5 +1,4 @@
 set(INCLUDE_DIRS "src")
-
 set(REQUIRES_ESP_IDF
   "log"
   "console"
@@ -42,6 +41,7 @@ set(EMBED_FILES "")
 # Common sources
 file(GLOB_RECURSE SOURCES 
     "src/wrapper/*.cpp" 
+    "src/registry/*.cpp"
     "src/device/*.cpp" 
     "src/app/*.cpp"
 )
@@ -49,6 +49,7 @@ file(GLOB_RECURSE SOURCES
 # Exclude display-dsi.cpp and ili9881c.cpp from common sources
 list(FILTER SOURCES EXCLUDE REGEX ".*display-dsi\\.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX ".*ili9881c\\.cpp$")
+list(FILTER SOURCES EXCLUDE REGEX ".*elf_loader\\.cpp$")
 
 # Add PowerHub source
 list(APPEND SOURCES "src/board/m5stack/powerhub.cpp")

@@ -2,7 +2,7 @@
 
 #include "esp_lvgl_port.h"
 #include "wrapper/display.hpp"
-#include "wrapper/touch.hpp"
+#include "registry/touch.hpp"
 #include "wrapper/logger.hpp"
 #include "wrapper/encoder.hpp"
 

@@ -2,7 +2,7 @@
 
 #if __has_include("esp_lcd_touch_gt911.h")
 
-#include "wrapper/touch.hpp"
+#include "registry/touch.hpp"
 #include "esp_lcd_touch_gt911.h"
 
 namespace wrapper

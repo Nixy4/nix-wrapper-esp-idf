@@ -1,4 +1,4 @@
-#include "wrapper/elf_loader.hpp"
+#include "registry/elf_loader.hpp"
 
 #include <cinttypes>
 

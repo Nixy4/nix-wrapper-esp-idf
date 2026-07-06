@@ -1,4 +1,4 @@
-#include "wrapper/lvgl.hpp"
+#include "registry/lvgl.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "lvgl.h"

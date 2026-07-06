@@ -9,9 +9,9 @@
 #include "wrapper/spi.hpp"
 #include "wrapper/i2s.hpp"
 #include "wrapper/display.hpp"
-#include "wrapper/touch.hpp"
-#include "wrapper/lvgl.hpp"
-#include "wrapper/audio.hpp"
+#include "registry/touch.hpp"
+#include "registry/lvgl.hpp"
+#include "registry/audio.hpp"
 
 #include "device/axp2101.hpp"
 #include "device/aw9523.hpp"

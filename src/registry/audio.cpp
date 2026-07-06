@@ -1,5 +1,5 @@
 #include <cmath>
-#include "wrapper/audio.hpp"
+#include "registry/audio.hpp"
 
 namespace wrapper
 {

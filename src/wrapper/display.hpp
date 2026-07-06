@@ -1,13 +1,12 @@
 #pragma once
 
-#include "esp_lcd_panel_io.h"
-#include "esp_lcd_panel_dev.h"
-#include "esp_lcd_panel_ops.h"
+// #include "esp_lcd_panel_io.h"
+// #include "esp_lcd_panel_dev.h"
+// #include "esp_lcd_panel_ops.h"
 
 #include "wrapper/logger.hpp"
 #include "wrapper/i2c.hpp"
 #include "wrapper/spi.hpp"
-// #include "wrapper/display.hpp"
 
 namespace wrapper
 {
