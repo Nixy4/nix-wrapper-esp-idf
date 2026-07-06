@@ -43,7 +43,9 @@ dependencies:
     public: true
     rules:
       - if: "target == esp32p4"
-
+  espressif/elf_loader:
+    version: "^1.3.1"
+    public: true    
 repository: https://github.com/Nixy4/nix-wrapper-esp-idf
 url: https://github.com/Nixy4/nix-wrapper-esp-idf
 description: "nix-wrapper-esp-idf component"

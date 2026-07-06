@@ -2,7 +2,10 @@
 
 #include <cinttypes>
 
-using namespace wrapper;
+#if __has_include("esp_elf.h")
+
+namespace wrapper
+{
 
 // ─── ElfLoader ───────────────────────────────────────────────────────────────
 
@@ -186,3 +189,7 @@ uintptr_t ElfLoader::FindSymbol(const char* sym_name) { return esp_elf_find_symb
 void ElfLoader::SetSymbolResolver(symbol_resolver resolver) { elf_set_symbol_resolver(resolver); }
 
 void ElfLoader::ResetSymbolResolver() { elf_reset_symbol_resolver(); }
+
+}  // namespace wrapper
+
+#endif  // __has_include("esp_elf.h")

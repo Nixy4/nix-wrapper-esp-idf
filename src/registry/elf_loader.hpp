@@ -35,7 +35,7 @@ class ElfLoader
     bool loaded_ = false;
 
    public:
-    explicit ElfLoader(Logger& logger);
+    ElfLoader(Logger& logger);
     ~ElfLoader();
 
     // 禁止拷贝（elf_ 内含由 esp_elf_init/deinit 管理的原始指针）
