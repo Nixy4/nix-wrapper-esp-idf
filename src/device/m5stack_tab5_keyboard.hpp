@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <functional>
 
-#include "wrapper/i2c.hpp"
+#include "local/i2c.hpp"
 
 namespace wrapper
 {

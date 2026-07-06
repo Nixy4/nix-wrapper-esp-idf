@@ -1,10 +1,10 @@
 #pragma once
 
 #include "esp_lvgl_port.h"
-#include "wrapper/display.hpp"
+#include "local/display.hpp"
 #include "registry/touch.hpp"
-#include "wrapper/logger.hpp"
-#include "wrapper/encoder.hpp"
+#include "local/logger.hpp"
+#include "local/encoder.hpp"
 
 namespace wrapper
 {

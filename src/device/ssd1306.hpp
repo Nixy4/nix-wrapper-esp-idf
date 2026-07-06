@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wrapper/display.hpp"
+#include "local/display.hpp"
 
 namespace wrapper
 {

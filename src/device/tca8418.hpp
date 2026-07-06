@@ -1,7 +1,7 @@
 #pragma once
 
-#include "wrapper/i2c.hpp"
-#include "wrapper/logger.hpp"
+#include "local/i2c.hpp"
+#include "local/logger.hpp"
 
 namespace wrapper
 {

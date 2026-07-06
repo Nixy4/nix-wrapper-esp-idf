@@ -1,5 +1,5 @@
 #pragma once
-#include "wrapper/display-dsi.hpp"
+#include "local/display-dsi.hpp"
 #include "esp_lcd_ili9881c.h"
 
 namespace wrapper

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <functional>
 
-#include "wrapper/logger.hpp"
+#include "local/logger.hpp"
 #include "device/tca8418.hpp"
 
 namespace wrapper

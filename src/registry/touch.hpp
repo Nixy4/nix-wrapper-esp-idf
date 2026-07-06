@@ -2,8 +2,8 @@
 
 #include "esp_lcd_touch.h"
 #include "esp_lcd_panel_io.h"
-#include "wrapper/i2c.hpp"
-#include "wrapper/logger.hpp"
+#include "local/i2c.hpp"
+#include "local/logger.hpp"
 #include <functional>
 
 namespace wrapper

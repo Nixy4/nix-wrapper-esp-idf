@@ -1,10 +1,10 @@
 #pragma once
 
-#include "wrapper/logger.hpp"
-#include "wrapper/i2c.hpp"
-#include "wrapper/ledc.hpp"
-#include "wrapper/ldo.hpp"
-#include "wrapper/display-dsi.hpp"
+#include "local/logger.hpp"
+#include "local/i2c.hpp"
+#include "local/ledc.hpp"
+#include "local/ldo.hpp"
+#include "local/display-dsi.hpp"
 #include "registry/touch.hpp"
 #include "registry/audio.hpp"
 #include "registry/lvgl.hpp"

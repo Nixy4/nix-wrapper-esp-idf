@@ -1,8 +1,8 @@
 #pragma once
 #include <u8g2.h>
-#include "wrapper/logger.hpp"
-#include "wrapper/i2c.hpp"
-#include "wrapper/spi.hpp"
+#include "local/logger.hpp"
+#include "local/i2c.hpp"
+#include "local/spi.hpp"
 
 namespace wrapper
 {

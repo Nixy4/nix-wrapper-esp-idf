@@ -4,7 +4,7 @@
 
 #include "esp_io_expander.h"
 #include "esp_io_expander_pi4ioe5v6408.h"
-#include "wrapper/i2c.hpp"
+#include "local/i2c.hpp"
 
 namespace wrapper
 {

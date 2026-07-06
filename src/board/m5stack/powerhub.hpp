@@ -1,5 +1,5 @@
 #pragma once
-#include "wrapper/i2c.hpp"
+#include "local/i2c.hpp"
 #include <unordered_map>
 #include <vector>
 #include <cstdint>

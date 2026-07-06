@@ -5,11 +5,11 @@
 
 #include "esp_lcd_st7789.h"
 #include <cmath>
-#include "wrapper/logger.hpp"
-#include "wrapper/i2c.hpp"
-#include "wrapper/spi.hpp"
-#include "wrapper/display.hpp"
-#include "wrapper/i2s.hpp"
+#include "local/logger.hpp"
+#include "local/i2c.hpp"
+#include "local/spi.hpp"
+#include "local/display.hpp"
+#include "local/i2s.hpp"
 #include "registry/audio.hpp"
 #include "device/m5stack_cardputer_keyboard.hpp"
 

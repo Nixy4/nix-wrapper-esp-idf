@@ -40,7 +40,7 @@ set(EMBED_FILES "")
 
 # Common sources
 file(GLOB_RECURSE SOURCES 
-    "src/wrapper/*.cpp" 
+    "src/local/*.cpp" 
     "src/registry/*.cpp"
     "src/device/*.cpp" 
     "src/app/*.cpp"
@@ -64,7 +64,7 @@ if(IDF_TARGET STREQUAL "esp32s3")
     list(APPEND SOURCES "src/board/lilygo/t-lora-pager.cpp")
   endif()
 elseif(IDF_TARGET STREQUAL "esp32p4")
-    list(APPEND SOURCES "src/wrapper/display-dsi.cpp")
+    list(APPEND SOURCES "src/local/display-dsi.cpp")
     list(APPEND SOURCES "src/device/ili9881c.cpp")
   if( CONFIG_WRAPPER_ESP32_BOARD_M5STACK_TAB5 )
     list(APPEND SOURCES "src/board/m5stack/tab5.cpp")

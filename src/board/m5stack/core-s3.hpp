@@ -1,11 +1,11 @@
 #pragma once
 
-#include "wrapper/logger.hpp"
-#include "wrapper/soc.hpp"
-#include "wrapper/i2c.hpp"
-#include "wrapper/spi.hpp"
-#include "wrapper/i2s.hpp"
-#include "wrapper/display.hpp"
+#include "local/logger.hpp"
+#include "local/soc.hpp"
+#include "local/i2c.hpp"
+#include "local/spi.hpp"
+#include "local/i2s.hpp"
+#include "local/display.hpp"
 #include "registry/touch.hpp"
 #include "registry/lvgl.hpp"
 #include "registry/audio.hpp"
