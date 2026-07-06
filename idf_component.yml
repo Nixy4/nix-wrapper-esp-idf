@@ -1,5 +1,5 @@
 dependencies:
-  idf: ">=5.5.1"
+  idf: ">=5.5.4"
   esp32-camera:
     public: true
     version: ^2.0.11
@@ -43,7 +43,7 @@ dependencies:
     public: true
     rules:
       - if: "target == esp32p4"
-
+  
 repository: https://github.com/Nixy4/nix-wrapper-esp-idf
 url: https://github.com/Nixy4/nix-wrapper-esp-idf
 description: "nix-wrapper-esp-idf component"
