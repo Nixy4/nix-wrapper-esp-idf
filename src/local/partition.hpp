@@ -6,10 +6,33 @@
 #include <string_view>
 #include <vector>
 
+#include "esp_flash_partitions.h"
 #include "local/logger.hpp"
 
 namespace wrapper
 {
+
+namespace partition_map
+{
+enum class PartitionType : uint8_t
+{
+    App = PART_TYPE_APP,
+    Data = PART_TYPE_DATA,
+};
+
+enum class PartitionSubtype : uint8_t
+{
+    Factory = PART_SUBTYPE_FACTORY,
+    Test = PART_SUBTYPE_TEST,
+    OtaFlag = PART_SUBTYPE_OTA_FLAG,
+    OtaMask = PART_SUBTYPE_OTA_MASK,
+    DataOta = PART_SUBTYPE_DATA_OTA,
+};
+
+constexpr uint8_t Value(PartitionType value) { return static_cast<uint8_t>(value); }
+
+constexpr uint8_t Value(PartitionSubtype value) { return static_cast<uint8_t>(value); }
+}  // namespace partition_map
 
 struct PartitionEntry
 {

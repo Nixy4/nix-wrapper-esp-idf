@@ -57,14 +57,16 @@ class LilyGoLoraPager
     LilyGoLoraPager(LilyGoLoraPager&&) = delete;
     LilyGoLoraPager& operator=(LilyGoLoraPager&&) = delete;
 
+    int display_brightness_ = 0;  // 当前背光亮度（0-100%）
+
    public:
+    std::atomic<bool> shutdown_requested{false};
+
     static LilyGoLoraPager& GetInstance()
     {
         static LilyGoLoraPager instance;
         return instance;
     }
-
-    std::atomic<bool> shutdown_requested{false};
 
     // -----------------------------------------------------------------------
     // 初始化 — 按顺序调用
@@ -136,6 +138,7 @@ class LilyGoLoraPager
 
     /** @brief 设置显示屏背光亮度 0–100% */
     void SetDisplayBrightness(int percent);
+    int GetDisplayBrightness() const { return display_brightness_; }
 
     /** @brief 打开 / 关闭背光 */
     void SetDisplayBacklight(bool on);

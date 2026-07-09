@@ -579,7 +579,14 @@ void LilyGoLoraPager::SetDisplayBrightness(int percent)
         percent = 100;
     // LEDC 10 位：最大占空比 = 1023
     uint32_t duty = static_cast<uint32_t>(1023 * percent / 100);
-    ledc_channel.SetDutyAndUpdate(duty);
+    if (ledc_channel.SetDutyAndUpdate(duty))
+    {
+        display_brightness_ = percent;
+    }
+    else
+    {
+        l_ledc.Error("Failed to set LEDC duty for brightness");
+    }
 }
 
 void LilyGoLoraPager::SetDisplayBacklight(bool on) { SetDisplayBrightness(on ? 100 : 0); }

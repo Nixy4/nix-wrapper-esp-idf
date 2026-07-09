@@ -18,13 +18,6 @@ namespace
 // clang-format off
 constexpr uint16_t kMagicEntry     = ESP_PARTITION_MAGIC;
 constexpr uint16_t kMagicMd5       = ESP_PARTITION_MAGIC_MD5;
-constexpr uint8_t  kTypeApp        = PART_TYPE_APP;
-constexpr uint8_t  kTypeData       = PART_TYPE_DATA;
-constexpr uint8_t  kSubtypeFactory = PART_SUBTYPE_FACTORY;
-constexpr uint8_t  kSubtypeTest    = PART_SUBTYPE_TEST;
-constexpr uint8_t  kSubtypeOtaFlag = PART_SUBTYPE_OTA_FLAG;
-constexpr uint8_t  kSubtypeOtaMask = PART_SUBTYPE_OTA_MASK;
-constexpr uint8_t  kSubtypeDataOta = PART_SUBTYPE_DATA_OTA;
 // clang-format on
 
 constexpr size_t kWriteChunkSize = 256;
@@ -84,18 +77,28 @@ bool GetFlashSize(uint32_t& flash_size)
 
 // ─── PartitionEntry ──────────────────────────────────────────────────────────
 
-bool PartitionEntry::IsApp() const { return type == kTypeApp; }
+bool PartitionEntry::IsApp() const
+{
+    return type == partition_map::Value(partition_map::PartitionType::App);
+}
 
-bool PartitionEntry::IsData() const { return type == kTypeData; }
+bool PartitionEntry::IsData() const
+{
+    return type == partition_map::Value(partition_map::PartitionType::Data);
+}
 
 bool PartitionEntry::IsOtaApp() const
 {
-    return IsApp() && (subtype & ~kSubtypeOtaMask) == kSubtypeOtaFlag;
+    const uint8_t ota_mask = partition_map::Value(partition_map::PartitionSubtype::OtaMask);
+    const uint8_t ota_flag = partition_map::Value(partition_map::PartitionSubtype::OtaFlag);
+    return IsApp() && (subtype & static_cast<uint8_t>(~ota_mask)) == ota_flag;
 }
 
 bool PartitionEntry::IsFactoryApp() const
 {
-    return IsApp() && (subtype == kSubtypeFactory || subtype == kSubtypeTest);
+    const uint8_t factory = partition_map::Value(partition_map::PartitionSubtype::Factory);
+    const uint8_t test = partition_map::Value(partition_map::PartitionSubtype::Test);
+    return IsApp() && (subtype == factory || subtype == test);
 }
 
 // ─── PartitionManager ────────────────────────────────────────────────────────
@@ -104,8 +107,8 @@ PartitionManager::PartitionManager(Logger& logger) : logger_(logger) {}
 
 bool PartitionManager::ReadCurrent(PartitionTable& table)
 {
-    esp_err_t err = esp_flash_read(
-        nullptr, sTableBuf, kPartitionTableOffset, static_cast<uint32_t>(kPartitionTableSize));
+    esp_err_t err = esp_flash_read(nullptr, sTableBuf, kPartitionTableOffset,
+                                   static_cast<uint32_t>(kPartitionTableSize));
     if (err != ESP_OK)
     {
         logger_.Error("Failed to read partition table from flash (err=0x%" PRIx32 ")",
@@ -161,8 +164,7 @@ bool PartitionManager::Parse(const uint8_t* data, size_t size, PartitionTable& t
 
         if (magic != kMagicEntry)
         {
-            logger_.Error("Invalid partition entry magic: 0x%04" PRIx16 " at offset 0x%x",
-                          magic,
+            logger_.Error("Invalid partition entry magic: 0x%04" PRIx16 " at offset 0x%x", magic,
                           static_cast<unsigned>(pos));
             return false;
         }
@@ -251,11 +253,9 @@ bool PartitionManager::Validate(const PartitionTable& table)
 
         if ((e.offset % kFlashSectorSize) != 0 || (e.size % kFlashSectorSize) != 0)
         {
-            logger_.Error("Partition '%s' not sector-aligned (offset=0x%" PRIx32
-                          " size=0x%" PRIx32 ")",
-                          e.label,
-                          e.offset,
-                          e.size);
+            logger_.Error("Partition '%s' not sector-aligned (offset=0x%" PRIx32 " size=0x%" PRIx32
+                          ")",
+                          e.label, e.offset, e.size);
             return false;
         }
 
@@ -267,8 +267,7 @@ bool PartitionManager::Validate(const PartitionTable& table)
 
         if (e.offset > flash_size || e.size > flash_size || e.offset + e.size > flash_size)
         {
-            logger_.Error("Partition '%s' exceeds flash size (flash=0x%" PRIx32 ")",
-                          e.label,
+            logger_.Error("Partition '%s' exceeds flash size (flash=0x%" PRIx32 ")", e.label,
                           flash_size);
             return false;
         }
@@ -281,8 +280,7 @@ bool PartitionManager::Validate(const PartitionTable& table)
 
         if (e.IsApp() && (e.offset % kAppPartitionAlignment) != 0)
         {
-            logger_.Error("App partition '%s' not 64 KB-aligned (offset=0x%" PRIx32 ")",
-                          e.label,
+            logger_.Error("App partition '%s' not 64 KB-aligned (offset=0x%" PRIx32 ")", e.label,
                           e.offset);
             return false;
         }
@@ -329,13 +327,12 @@ bool PartitionManager::Write(const PartitionTable& table)
 
     for (uint8_t attempt = 0; attempt < 3; ++attempt)
     {
-        esp_err_t err = esp_flash_erase_region(
-            nullptr, kPartitionTableOffset, static_cast<uint32_t>(kPartitionTableSize));
+        esp_err_t err = esp_flash_erase_region(nullptr, kPartitionTableOffset,
+                                               static_cast<uint32_t>(kPartitionTableSize));
         if (err != ESP_OK)
         {
             logger_.Warning("Failed to erase partition table (attempt %d, err=0x%" PRIx32 ")",
-                            attempt + 1,
-                            static_cast<uint32_t>(err));
+                            attempt + 1, static_cast<uint32_t>(err));
             continue;
         }
 
@@ -344,15 +341,12 @@ bool PartitionManager::Write(const PartitionTable& table)
         {
             const uint32_t len =
                 std::min(static_cast<uint32_t>(kWriteChunkSize), kPartitionTableSize - offset);
-            err = esp_flash_write(
-                nullptr, sTableBuf + offset, kPartitionTableOffset + offset, len);
+            err = esp_flash_write(nullptr, sTableBuf + offset, kPartitionTableOffset + offset, len);
             if (err != ESP_OK)
             {
-                logger_.Warning(
-                    "Failed to write partition table chunk at offset 0x%" PRIx32
-                    " (attempt %d)",
-                    offset,
-                    attempt + 1);
+                logger_.Warning("Failed to write partition table chunk at offset 0x%" PRIx32
+                                " (attempt %d)",
+                                offset, attempt + 1);
                 write_ok = false;
                 break;
             }
@@ -363,8 +357,8 @@ bool PartitionManager::Write(const PartitionTable& table)
             continue;
         }
 
-        err = esp_flash_read(
-            nullptr, sVerifyBuf, kPartitionTableOffset, static_cast<uint32_t>(kPartitionTableSize));
+        err = esp_flash_read(nullptr, sVerifyBuf, kPartitionTableOffset,
+                             static_cast<uint32_t>(kPartitionTableSize));
         if (err != ESP_OK || memcmp(sTableBuf, sVerifyBuf, kPartitionTableSize) != 0)
         {
             logger_.Warning("Partition table write verification failed (attempt %d)", attempt + 1);
@@ -422,7 +416,8 @@ const PartitionEntry* PartitionManager::FindOtaData(const PartitionTable& table)
 {
     for (const PartitionEntry& e : table.entries)
     {
-        if (e.IsData() && e.subtype == kSubtypeDataOta)
+        if (e.IsData() &&
+            e.subtype == partition_map::Value(partition_map::PartitionSubtype::DataOta))
         {
             return &e;
         }
@@ -452,10 +447,8 @@ std::vector<PartitionRange> PartitionManager::GetFreeRanges(const PartitionTable
     }
 
     std::vector<PartitionEntry> sorted = table.entries;
-    std::sort(
-        sorted.begin(), sorted.end(), [](const PartitionEntry& a, const PartitionEntry& b) {
-            return a.offset < b.offset;
-        });
+    std::sort(sorted.begin(), sorted.end(),
+              [](const PartitionEntry& a, const PartitionEntry& b) { return a.offset < b.offset; });
 
     std::vector<PartitionRange> free_ranges;
     uint32_t cursor = kPartitionTableOffset + kPartitionTableSize;
@@ -492,8 +485,7 @@ bool PartitionManager::FindFreeRange(const PartitionTable& table,
         }
     }
     logger_.Error("No free range of size 0x%" PRIx32 " (alignment 0x%" PRIx32 ") found",
-                  required_size,
-                  alignment);
+                  required_size, alignment);
     return false;
 }
 
@@ -519,7 +511,8 @@ bool PartitionManager::CreateOtaApp(PartitionTable& table,
     int next_subtype = -1;
     for (int i = 0; i <= 0x0F; ++i)
     {
-        const uint8_t candidate = static_cast<uint8_t>(kSubtypeOtaFlag | i);
+        const uint8_t ota_flag = partition_map::Value(partition_map::PartitionSubtype::OtaFlag);
+        const uint8_t candidate = static_cast<uint8_t>(ota_flag | i);
         bool in_use = false;
         for (const PartitionEntry& e : table.entries)
         {
@@ -550,7 +543,7 @@ bool PartitionManager::CreateOtaApp(PartitionTable& table,
     }
 
     PartitionEntry entry{};
-    entry.type = kTypeApp;
+    entry.type = partition_map::Value(partition_map::PartitionType::App);
     entry.subtype = static_cast<uint8_t>(next_subtype);
     entry.offset = range.offset;
     entry.size = aligned_size;
@@ -569,10 +562,7 @@ bool PartitionManager::CreateOtaApp(PartitionTable& table,
     }
 
     logger_.Info("Created OTA app '%s': offset=0x%" PRIx32 " size=0x%" PRIx32 " subtype=0x%02x",
-                 entry.label,
-                 entry.offset,
-                 entry.size,
-                 entry.subtype);
+                 entry.label, entry.offset, entry.size, entry.subtype);
     return true;
 }
 
@@ -582,7 +572,8 @@ bool PartitionManager::CreateDataPartition(PartitionTable& table,
                                            uint32_t size,
                                            PartitionEntry* created)
 {
-    const uint32_t alignment = GetAlignment(kTypeData, subtype);
+    const uint32_t alignment =
+        GetAlignment(partition_map::Value(partition_map::PartitionType::Data), subtype);
     const uint32_t aligned_size = AlignUp(size, kFlashSectorSize);
 
     PartitionRange range{};
@@ -592,7 +583,7 @@ bool PartitionManager::CreateDataPartition(PartitionTable& table,
     }
 
     PartitionEntry entry{};
-    entry.type = kTypeData;
+    entry.type = partition_map::Value(partition_map::PartitionType::Data);
     entry.subtype = subtype;
     entry.offset = range.offset;
     entry.size = aligned_size;
@@ -612,10 +603,7 @@ bool PartitionManager::CreateDataPartition(PartitionTable& table,
 
     logger_.Info("Created data partition '%s': offset=0x%" PRIx32 " size=0x%" PRIx32
                  " subtype=0x%02x",
-                 entry.label,
-                 entry.offset,
-                 entry.size,
-                 entry.subtype);
+                 entry.label, entry.offset, entry.size, entry.subtype);
     return true;
 }
 
@@ -629,10 +617,8 @@ bool PartitionManager::Compact(PartitionTable& table)
     }
     table.flash_size = flash_size;
 
-    std::sort(
-        table.entries.begin(), table.entries.end(), [](const PartitionEntry& a, const PartitionEntry& b) {
-            return a.offset < b.offset;
-        });
+    std::sort(table.entries.begin(), table.entries.end(),
+              [](const PartitionEntry& a, const PartitionEntry& b) { return a.offset < b.offset; });
 
     uint32_t cursor = kPartitionTableOffset + kPartitionTableSize;
     for (PartitionEntry& e : table.entries)
@@ -672,8 +658,7 @@ bool PartitionManager::SetOtaBoot(const PartitionTable& table, uint8_t app_subty
 
     const esp_partition_t* part = esp_partition_find_first(
         static_cast<esp_partition_type_t>(target->type),
-        static_cast<esp_partition_subtype_t>(target->subtype),
-        target->label);
+        static_cast<esp_partition_subtype_t>(target->subtype), target->label);
     if (!part)
     {
         logger_.Error("Could not locate partition '%s' via esp_partition API", target->label);
@@ -684,8 +669,7 @@ bool PartitionManager::SetOtaBoot(const PartitionTable& table, uint8_t app_subty
     if (err != ESP_OK)
     {
         logger_.Error("esp_ota_set_boot_partition failed for '%s' (err=0x%" PRIx32 ")",
-                      target->label,
-                      static_cast<uint32_t>(err));
+                      target->label, static_cast<uint32_t>(err));
         return false;
     }
 
@@ -713,8 +697,7 @@ bool PartitionManager::ClearOtaBoot(const PartitionTable& table)
 
     const esp_partition_t* part = esp_partition_find_first(
         static_cast<esp_partition_type_t>(factory->type),
-        static_cast<esp_partition_subtype_t>(factory->subtype),
-        factory->label);
+        static_cast<esp_partition_subtype_t>(factory->subtype), factory->label);
     if (!part)
     {
         logger_.Error("Could not locate factory partition via esp_partition API");
@@ -737,11 +720,11 @@ bool PartitionManager::ClearOtaBoot(const PartitionTable& table)
 
 uint32_t PartitionManager::GetAlignment(uint8_t type, uint8_t subtype)
 {
-    if (type == kTypeApp)
+    if (type == partition_map::Value(partition_map::PartitionType::App))
     {
         return kAppPartitionAlignment;
     }
-    if (type == kTypeData &&
+    if (type == partition_map::Value(partition_map::PartitionType::Data) &&
         (subtype == ESP_PARTITION_SUBTYPE_DATA_FAT ||
          subtype == ESP_PARTITION_SUBTYPE_DATA_SPIFFS ||
          subtype == ESP_PARTITION_SUBTYPE_DATA_LITTLEFS))
