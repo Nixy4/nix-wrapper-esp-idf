@@ -3,6 +3,7 @@
 
 #if CONFIG_WRAPPER_ESP32_BOARD_LILYGO_T_LORA_PAGER
 
+#include <atomic>
 #include <functional>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -28,6 +29,13 @@
 namespace wrapper
 {
 
+static constexpr TickType_t kBootButtonStartupIgnoreTicks = pdMS_TO_TICKS(1500);
+static constexpr TickType_t kBootButtonDebounceTicks = pdMS_TO_TICKS(80);
+
+static std::atomic<uint32_t> s_boot_button_ignore_until_tick{0};
+static std::atomic<uint32_t> s_boot_button_last_isr_tick{0};
+static std::atomic<uint32_t> s_boot_button_last_trigger_tick{0};
+
 gpio_config_t boot_button_gpio_cfg = {.pin_bit_mask = (1ULL << GPIO_NUM_0),
                                       .mode = GPIO_MODE_INPUT,
                                       .pull_up_en = GPIO_PULLUP_ENABLE,
@@ -37,11 +45,32 @@ gpio_config_t boot_button_gpio_cfg = {.pin_bit_mask = (1ULL << GPIO_NUM_0),
 static void boot_button_isr_handler(void* arg)
 {
     auto* board = static_cast<LilyGoLoraPager*>(arg);
-    if (board && gpio_get_level(GPIO_NUM_0) == 0)  // 确认低电平触发
+    if (!board)
+        return;
+
+    const TickType_t now = xTaskGetTickCountFromISR();
+    const TickType_t ignore_until =
+        static_cast<TickType_t>(s_boot_button_ignore_until_tick.load(std::memory_order_relaxed));
+
+    // 上电初期忽略按键中断，过滤 GPIO0 启动瞬态。
+    if (static_cast<int32_t>(now - ignore_until) < 0)
+        return;
+
+    const TickType_t last_tick =
+        static_cast<TickType_t>(s_boot_button_last_isr_tick.load(std::memory_order_relaxed));
+    const int32_t dt = static_cast<int32_t>(now - last_tick);
+
+    // 去抖：忽略短时间内重复下降沿。
+    if (dt >= 0 && static_cast<TickType_t>(dt) < kBootButtonDebounceTicks)
+        return;
+
+    if (gpio_get_level(GPIO_NUM_0) == 0)
     {
-        board->shutdown_requested.store(true);
+        s_boot_button_last_isr_tick.store(static_cast<uint32_t>(now), std::memory_order_relaxed);
+        s_boot_button_last_trigger_tick.store(static_cast<uint32_t>(now),
+                                              std::memory_order_relaxed);
+        board->shutdown_requested.store(true, std::memory_order_release);
     }
-    ESP_LOGE("LoraPager", "Boot button pressed, shutdown requested.");
 }
 
 // =============================================================================
@@ -340,9 +369,35 @@ std::function<esp_err_t()> mic_codec_new_func = []() -> esp_err_t
 bool LilyGoLoraPager::InitBootButton()
 {
     // 0. 初始化 GPIO0（BOOT 按钮）为输入，低电平触发软件关机
-    gpio_config(&boot_button_gpio_cfg);
-    gpio_install_isr_service(0);
-    gpio_isr_handler_add(GPIO_NUM_0, boot_button_isr_handler, this);
+    if (gpio_config(&boot_button_gpio_cfg) != ESP_OK)
+    {
+        ESP_LOGE("LoraPager", "Failed to configure boot button GPIO0.");
+        return false;
+    }
+
+    const TickType_t now = xTaskGetTickCount();
+    s_boot_button_last_isr_tick.store(static_cast<uint32_t>(now), std::memory_order_relaxed);
+    s_boot_button_last_trigger_tick.store(0, std::memory_order_relaxed);
+    s_boot_button_ignore_until_tick.store(
+        static_cast<uint32_t>(now + kBootButtonStartupIgnoreTicks), std::memory_order_relaxed);
+    ESP_LOGI("LoraPager", "Boot button guard: startup_ignore=%lu ms, debounce=%lu ms",
+             static_cast<unsigned long>(pdTICKS_TO_MS(kBootButtonStartupIgnoreTicks)),
+             static_cast<unsigned long>(pdTICKS_TO_MS(kBootButtonDebounceTicks)));
+
+    esp_err_t ret = gpio_install_isr_service(0);
+    if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE)
+    {
+        ESP_LOGE("LoraPager", "Failed to install GPIO ISR service: %s", esp_err_to_name(ret));
+        return false;
+    }
+
+    ret = gpio_isr_handler_add(GPIO_NUM_0, boot_button_isr_handler, this);
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE("LoraPager", "Failed to add boot button ISR: %s", esp_err_to_name(ret));
+        return false;
+    }
+
     return true;
 }
 
@@ -598,10 +653,20 @@ bool LilyGoLoraPager::SetPeripheralPower(uint32_t xl9555_pin, bool enable)
 
 void LilyGoLoraPager::BootButtonHandler()
 {
-    if (shutdown_requested.load())
+    if (shutdown_requested.exchange(false, std::memory_order_acquire))
     {
+        const TickType_t now = xTaskGetTickCount();
+        const TickType_t trig_tick = static_cast<TickType_t>(
+            s_boot_button_last_trigger_tick.load(std::memory_order_relaxed));
+        const uint32_t latency_ms =
+            (trig_tick == 0) ? 0u : static_cast<uint32_t>(pdTICKS_TO_MS(now - trig_tick));
+
+        ESP_LOGE("LoraPager", "Boot button pressed, shutdown requested.");
+        ESP_LOGI("LoraPager",
+                 "Boot button event: trigger_tick=%lu, handle_tick=%lu, latency=%lu ms",
+                 static_cast<unsigned long>(trig_tick), static_cast<unsigned long>(now),
+                 static_cast<unsigned long>(latency_ms));
         GetPmu().Shutdown();
-        shutdown_requested.store(false);  // 重置标志，避免重复关机
     }
 }
 
