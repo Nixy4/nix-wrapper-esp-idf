@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string_view>
 
 #include "esp_elf.h"
 
@@ -22,7 +23,8 @@ namespace wrapper
  * @code
  *   wrapper::ElfLoader loader(logger);
  *   loader.Init();
- *   loader.Load(elf_data, elf_size);   // 或 loader.LoadFromFile("app.elf")
+ *   loader.Load(elf_data, elf_size);   // 或 loader.LoadFromSpiffs("app.elf")
+ *   // 或 loader.LoadFromSdCard("app.elf")
  *   loader.Run(argc, argv);
  *   loader.Deinit();
  * @endcode
@@ -76,6 +78,30 @@ class ElfLoader
      * @return true 成功。
      */
     bool LoadFromFile(const char* name);
+
+    /**
+     * @brief 从 SPIFFS 加载 ELF（通过底层 esp_elf_open）。
+     *
+     * @param name  SPIFFS 中的 ELF 文件名（不含路径）。
+     * @return true 成功。
+     */
+    bool LoadFromSpiffs(std::string_view name);
+
+    /**
+     * @brief 从 SD 卡根路径加载 ELF（默认目录为 /sdcard）。
+     *
+     * @param file_name  SD 卡中的 ELF 文件名。
+     * @return true 成功。
+     */
+    bool LoadFromSdCard(std::string_view file_name);
+
+    /**
+     * @brief 从 SD 卡完整路径加载 ELF。
+     *
+     * @param full_path  SD 卡 ELF 完整路径（如 /sdcard/app.elf）。
+     * @return true 成功。
+     */
+    bool LoadFromSdCardPath(std::string_view full_path);
 
     // ── 执行 ──────────────────────────────────────────────────────────────────
 
