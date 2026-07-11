@@ -31,7 +31,7 @@ set(REQUIRES_ESP_IDF
   "esp_app_format"
 )
 set(REQUIRES_ESP_REGISTRY "")
-set(REQUIRES_PROJECT "")
+set(REQUIRES_PROJECT "u8g2")
 
 set(REQUIRES ${REQUIRES_ESP_IDF} ${REQUIRES_ESP_REGISTRY} ${REQUIRES_PROJECT})
 set(PRIV_REQUIRES "")
@@ -44,6 +44,8 @@ file(GLOB_RECURSE SOURCES
     "src/registry/*.cpp"
     "src/device/*.cpp" 
     "src/app/*.cpp"
+    "src/misc/*.cpp"
+  "src/misc/console/*.cpp"
 )
 
 # Exclude display-dsi.cpp and ili9881c.cpp from common sources

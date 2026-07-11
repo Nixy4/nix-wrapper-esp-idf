@@ -435,7 +435,7 @@ bool Console::Stop()
 void Console::ConsoleLoop(void* arg)
 {
     Console* self = static_cast<Console*>(arg);
-    self->logger_.Info("console task started");
+    // self->logger_.Info("console task started");
 
     while (!self->should_exit_.load())
     {
