@@ -57,26 +57,11 @@ list(FILTER SOURCES EXCLUDE REGEX ".*ili9881c\\.cpp$")
 # 如需启用，请在本行注释掉后自行在 components/ 下提供 u8g2 组件。
 list(FILTER SOURCES EXCLUDE REGEX ".*u8g2-hal-esp-idf\\.cpp$")
 
-# M5Stack PowerHub 是独立模块/开发板（板级代码），不属于 wrapper 通用能力，
-# 且当前实现不完善（powerhub.hpp 空单例与 powerhub.cpp 的 PowerHubI2c 脱节），
-# 故不参与 wrapper 编译，待 board 独立时一并迁移。
-# list(APPEND SOURCES "src/board/m5stack/powerhub.cpp")
-
-# Board specific sources
-if(IDF_TARGET STREQUAL "esp32s3")
-  if( CONFIG_WRAPPER_ESP32_BOARD_M5STACK_CORE_S3 )
-    list(APPEND SOURCES "src/board/m5stack/core-s3.cpp")
-  elseif( CONFIG_WRAPPER_ESP32_BOARD_M5STACK_CARDPUTER )
-    list(APPEND SOURCES "src/board/m5stack/cardputer.cpp")
-  elseif( CONFIG_WRAPPER_ESP32_BOARD_LILYGO_T_LORA_PAGER )
-    list(APPEND SOURCES "src/board/lilygo/t-lora-pager.cpp")
-  endif()
-elseif(IDF_TARGET STREQUAL "esp32p4")
+# board 源码已拆分到 nix-board-esp-idf，wrapper 不再编译任何 board 源码。
+# p4 专用 local/device 源码仍需按目标加入。
+if(IDF_TARGET STREQUAL "esp32p4")
     list(APPEND SOURCES "src/local/display-dsi.cpp")
     list(APPEND SOURCES "src/device/ili9881c.cpp")
-  if( CONFIG_WRAPPER_ESP32_BOARD_M5STACK_TAB5 )
-    list(APPEND SOURCES "src/board/m5stack/tab5.cpp")
-  endif()
 endif()
 
 idf_component_register(
