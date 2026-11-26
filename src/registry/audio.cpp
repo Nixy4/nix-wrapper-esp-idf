@@ -451,6 +451,8 @@ bool AudioCodec::Init(I2sBus& i2s_bus)
         logger_.Info("I2S Audio Codec GPIO Interface initialized");
     }
 
+    i2s_bus_ = &i2s_bus;
+
     return true;
 }
 
