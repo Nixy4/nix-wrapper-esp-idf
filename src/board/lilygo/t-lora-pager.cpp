@@ -74,19 +74,26 @@ static void boot_button_isr_handler(void* arg)
 }
 
 // =============================================================================
-// XL9555 虚拟引脚分配
-// TODO: 请对照 T-LoraPager 原理图 PDF 确认具体编号。
-//       (github.com/Xinyuan-LilyGO/LilyGoLib/blob/master/Files/...V1.0_20250805.pdf)
+// XL9555 虚拟引脚分配（已确认）
+// 依据：doc/T-Lora Pager V1.0 SCH 25-06-13.pdf 第 3 页 U22 = XL9555QF24
+//       并已交叉验证 LilyGo 官方 EXPANDS_* 定义，两者完全一致。
+//
+// 编号规则：扁平位序号，0-7 对应 P00-P07，8-15 对应 P10-P17。
+// 未使用：P15 / P16 悬空，P17 接地。
 // =============================================================================
-static constexpr uint32_t kXl9555PinKbRst = 0;    // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinLoraEn = 1;   // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinGpsEn = 2;    // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinDrvEn = 3;    // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinAmpEn = 4;    // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinNfcEn = 5;    // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinSdEn = 6;     // TODO: 待原理图确认
-static constexpr uint32_t kXl9555PinSdDet = 7;    // TODO: 待原理图确认（输入）
-static constexpr uint32_t kXl9555PinDispRst = 8;  // TODO: 待原理图确认（可选）
+static constexpr uint32_t kXl9555PinDrvEn = 0;      // P00  M_EN      → DRV2605 EN（震动马达使能）
+static constexpr uint32_t kXl9555PinAmpEn = 1;      // P01  SHUTDOWN  → NS4150B CTRL（功放使能）
+static constexpr uint32_t kXl9555PinKbRst = 2;      // P02  KEY_RST   → TCA8418 RESET（低有效）
+static constexpr uint32_t kXl9555PinLoraEn = 3;     // P03  LORA_EN   → LORA_VDD 电源轨
+static constexpr uint32_t kXl9555PinGpsEn = 4;      // P04  GPS_EN    → GPS_VDD 电源轨
+static constexpr uint32_t kXl9555PinNfcEn = 5;      // P05  RF_EN     → ST25R3916 射频电源
+static constexpr uint32_t kXl9555PinDispRst = 6;    // P06  LCD_RST   → LCD RESET（低有效）
+static constexpr uint32_t kXl9555PinGpsRst = 7;     // P07  GPS_RST   → MIA-M10Q RESET_N（低有效）
+static constexpr uint32_t kXl9555PinKbEn = 8;       // P10  KEY_EN    → KEY_VDD 电源轨
+static constexpr uint32_t kXl9555PinGpioEn = 9;     // P11  NRF_CE    → 外接 GPIO / NRF 使能
+static constexpr uint32_t kXl9555PinSdDet = 10;     // P12  SD_DET    → TF 卡检测（输入）
+static constexpr uint32_t kXl9555PinSdPullEn = 11;  // P13  SPI_PULLUP_EN → SPI 上拉使能
+static constexpr uint32_t kXl9555PinSdEn = 12;      // P14  SD_EN     → SD_VDD 电源轨
 
 // ES8311 I2C 地址（esp_codec_dev 期望的8 位格式：7 位 0x18 << 1 = 0x30）
 static constexpr uint8_t kEs8311Addr = 0x30;
@@ -457,7 +464,8 @@ bool LilyGoLoraPager::InitDisplay()
         gpio_set_level(pin, 1);
     }
 
-    // 3.（可选）若已连线，通过 XL9555 执行显示屏硬件复位
+    // 3.（可选）通过 XL9555 执行显示屏硬件复位（LCD_RST = P06，低有效）
+    //    注意：St7796::Init() 内部已发送 SWRESET 软复位，硬件复位默认不启用。
     //    xl9555.SetLevel(kXl9555PinDispRst, 0);
     //    vTaskDelay(pdMS_TO_TICKS(10));
     //    xl9555.SetLevel(kXl9555PinDispRst, 1);
@@ -505,7 +513,7 @@ bool LilyGoLoraPager::InitDisplay()
 
 bool LilyGoLoraPager::InitAudio()
 {
-    // 通过 XL9555 使能功放（AMP_EN）
+    // 通过 XL9555 使能功放（SHUTDOWN = P01，高电平 = 正常工作）
     xl9555.SetLevel(kXl9555PinAmpEn, 1);
 
     // 1. I²S 总线
@@ -582,7 +590,7 @@ bool LilyGoLoraPager::InitEncoder()
 
 bool LilyGoLoraPager::InitSdCard()
 {
-    // 1. 通过 XL9555 使能 SD 电源轨（kXl9555PinSdEn，待原理图确认引脚编号）
+    // 1. 通过 XL9555 使能 SD 电源轨（SD_EN = P14 / 位 12）
     xl9555.SetLevel(kXl9555PinSdEn, 1);
     vTaskDelay(pdMS_TO_TICKS(10));  // 等待电源稳定
 
