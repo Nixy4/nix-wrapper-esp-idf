@@ -31,7 +31,7 @@ set(REQUIRES_ESP_IDF
   "esp_app_format"
 )
 set(REQUIRES_ESP_REGISTRY "")
-set(REQUIRES_PROJECT "u8g2")
+set(REQUIRES_PROJECT "")
 
 set(REQUIRES ${REQUIRES_ESP_IDF} ${REQUIRES_ESP_REGISTRY} ${REQUIRES_PROJECT})
 set(PRIV_REQUIRES "")
@@ -52,6 +52,10 @@ file(GLOB_RECURSE SOURCES
 list(FILTER SOURCES EXCLUDE REGEX ".*display-dsi\\.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX ".*ili9881c\\.cpp$")
 # list(FILTER SOURCES EXCLUDE REGEX ".*elf_loader\\.cpp$")
+
+# u8g2 HAL 源码保留在 src/misc/ 中，但不参与编译（不引入 u8g2 组件依赖）。
+# 如需启用，请在本行注释掉后自行在 components/ 下提供 u8g2 组件。
+list(FILTER SOURCES EXCLUDE REGEX ".*u8g2-hal-esp-idf\\.cpp$")
 
 # Add PowerHub source
 list(APPEND SOURCES "src/board/m5stack/powerhub.cpp")
