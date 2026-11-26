@@ -17,4 +17,12 @@ menu "Wrapper-ESP32"
             bool "LilyGo T-LoraPager"
             depends on IDF_TARGET_ESP32S3
     endchoice
+
+    config WRAPPER_ESP32_POWERHUB
+        bool "Enable M5Stack PowerHub driver"
+        default n
+        help
+            M5Stack PowerHub 是可选电源扩展模块的驱动（board/m5stack/powerhub.cpp）。
+            该模块与具体开发板解耦，可按需单独启用；默认关闭以避免向
+            不使用该模块的工程引入额外编译负担。
 endmenu
