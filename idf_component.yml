@@ -9,6 +9,9 @@ dependencies:
   jbrilha/esp_lcd_st7789:
     public: true
     version: "*"
+  espressif/esp_lcd_touch:
+    public: true
+    version: ^1.2.0
   esp_lcd_touch_ft5x06: 
     public: true
     version: ^1

@@ -57,11 +57,10 @@ list(FILTER SOURCES EXCLUDE REGEX ".*ili9881c\\.cpp$")
 # 如需启用，请在本行注释掉后自行在 components/ 下提供 u8g2 组件。
 list(FILTER SOURCES EXCLUDE REGEX ".*u8g2-hal-esp-idf\\.cpp$")
 
-# M5Stack PowerHub 为可选扩展模块驱动，默认不编译。
-# 需要在工程中启用：idf.py menuconfig → Wrapper-ESP32 → Enable M5Stack PowerHub driver
-if(CONFIG_WRAPPER_ESP32_POWERHUB)
-  list(APPEND SOURCES "src/board/m5stack/powerhub.cpp")
-endif()
+# M5Stack PowerHub 是独立模块/开发板（板级代码），不属于 wrapper 通用能力，
+# 且当前实现不完善（powerhub.hpp 空单例与 powerhub.cpp 的 PowerHubI2c 脱节），
+# 故不参与 wrapper 编译，待 board 独立时一并迁移。
+# list(APPEND SOURCES "src/board/m5stack/powerhub.cpp")
 
 # Board specific sources
 if(IDF_TARGET STREQUAL "esp32s3")
